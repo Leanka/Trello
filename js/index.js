@@ -6,4 +6,15 @@ window.onload = function(){
     document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
 }
 
+function parseJsonToClassInstance(classType, json){
+    let jasonData = JSON.parse(json)
+    let values = [];
+    
+    for(key in jasonData){
+        values.push(jasonData[key])
+    }
+
+    return new classType(...values)
+}
+
 
