@@ -6,7 +6,19 @@ function addNewTaskToList(ev) {
   li.appendChild(document.createTextNode(taskTitle));
   ul.appendChild(li);
   ev.target.value = '';
+  addRemoveListeners();
 }
+
+function removeTask(ev) {
+    ev.currentTarget.parentNode.parentNode.removeChild(ev.currentTarget.parentNode);
+}
+
+function addRemoveListeners() {
+    var spans = document.getElementsByTagName('span');
+for(var i=0;i<spans.length;i++) {
+	spans[i].onclick = removeTask;
+};
+};
 
 document.getElementsByName("newTask")[0].addEventListener('keypress', function (ev) {
     var key = ev.which || ev.keyCode;
@@ -15,3 +27,5 @@ document.getElementsByName("newTask")[0].addEventListener('keypress', function (
       addNewTaskToList(ev);
     }
 });
+
+addRemoveListeners();
