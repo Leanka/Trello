@@ -13,7 +13,7 @@ export class Project {
     }
 }
 
-class List{
+export class List{
     constructor(id, title) {
         this._id = id;
         this._title = title;
@@ -28,7 +28,7 @@ class List{
     }
 }
 
-class Task{
+export class Task{
     constructor(id, title) {
        this._id = id;
        this._title = title;
