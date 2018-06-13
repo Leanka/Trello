@@ -4,15 +4,41 @@ export class Project {
         this._description = description;
     }
 
-    getTitle(){
+    get title(){
         return this._title;
     }
 
-    getDescription(){
+    get discription(){
         return this._description;
     }
 }
 
-class List{}
+class List{
+    constructor(id, title) {
+        this._id = id;
+        this._title = title;
+    }
 
-class Task{}
+    get id() {
+        return this._id;
+    }
+
+    get title() {
+        return this._title;
+    }
+}
+
+class Task{
+    constructor(id, title) {
+       this._id = id;
+       this._title = title;
+    }
+
+    get id() {
+        return this._id;
+    }
+
+    get title() {
+        return this._title;
+    }
+}
