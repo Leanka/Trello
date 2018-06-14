@@ -14,7 +14,6 @@ window.onload = function(){
 
 function loadAllProjects(){
     for(let key in localStorage){
-        console.log('key :', typeof key);
         if(key.includes("project")){
             createItem(parseJsonToClassInstance(models.Project, localStorage.getItem(key)))
         }
