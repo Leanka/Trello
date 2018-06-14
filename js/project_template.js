@@ -1,13 +1,18 @@
 
 import * as include from "../js/htmlInjection.js";
 import * as models from "../js/models.js";
-var projectKey = 
+
 window.onload = function(){
     include.includeHTML();
 
-    console.log("dupa")
-    projectKey = parseQuery(window.location.search);
-    // loadAllLists(data)
+    var projectKey = parseQuery(window.location.search);
+    if(projectKey){
+        localStorage.setItem("current", projectKey)
+    }else{
+        projectKey = localStorage.getItem("current")
+    }
+
+    loadAllLists(projectKey)
 
     document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
     document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
@@ -15,13 +20,13 @@ window.onload = function(){
 
 }
 
-function loadAllLists(){
-
+function loadAllLists(projectKey){
     for(let key in localStorage){
-        if(key.includes("list")){
-            let list = localStorage.getItem(key);
-            if(list._parentKey == projectKey)
-            createItem(parseJsonToClassInstance(models.Project, localStorage.getItem(key)))
+        if(key.includes("list")){ //check if item is a list
+            let list = parseJsonToClassInstance(models.List, localStorage.getItem(key));
+            if(list._parentKey == projectKey){ //check if list if from current project
+                createItem(parseJsonToClassInstance(models.List, localStorage.getItem(key)))
+            }
         }
     }
 }
@@ -32,6 +37,9 @@ function getFormData(){
 
     document.getElementById("title").value = ""; //clear fields after getting user input
     document.getElementById("myModal").style.display = "none"; //hide form
+
+    var projectKey = localStorage.getItem("current");
+    console.log('projectKey :', projectKey);
     createItem(new models.List("list-"+getCounter(),title, projectKey));
 }
 
@@ -54,7 +62,6 @@ function insertItem(item){
 function createItem(item){
     saveItem(item); //save to local storage
     insertItem(item)//create & insert new card
-    //reload container?
 }
 
 function saveItem(item){
