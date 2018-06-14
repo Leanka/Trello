@@ -1,3 +1,97 @@
+
+import * as include from "../js/htmlInjection.js";
+import * as models from "../js/models.js";
+var projectKey = 
+window.onload = function(){
+    include.includeHTML();
+
+    console.log("dupa")
+    projectKey = parseQuery(window.location.search);
+    // loadAllLists(data)
+
+    document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
+    document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
+    document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
+
+}
+
+function loadAllLists(){
+
+    for(let key in localStorage){
+        if(key.includes("list")){
+            let list = localStorage.getItem(key);
+            if(list._parentKey == projectKey)
+            createItem(parseJsonToClassInstance(models.Project, localStorage.getItem(key)))
+        }
+    }
+}
+
+function getFormData(){
+    //????
+    let title = document.getElementById("title").value;
+
+    document.getElementById("title").value = ""; //clear fields after getting user input
+    document.getElementById("myModal").style.display = "none"; //hide form
+    createItem(new models.List("list-"+getCounter(),title, projectKey));
+}
+
+function insertItem(item){
+    //code for inserting project
+    var newProjectId = `${item._key}`;
+    var customContainer = document.createElement("div");
+    customContainer.setAttribute("id", newProjectId)
+    customContainer.setAttribute("class", "col")
+    
+    include.singleHtmlElementInsert("../html/list-template.html", "main-project-container", customContainer)
+
+    // //fill project card with data
+    var doc = document.getElementById(newProjectId)
+
+    doc.getElementsByClassName("list-title")[0].innerText = item._title
+    addKeyListenersToInputs();
+}
+
+function createItem(item){
+    saveItem(item); //save to local storage
+    insertItem(item)//create & insert new card
+    //reload container?
+}
+
+function saveItem(item){
+    localStorage.setItem(item._key, JSON.stringify(item))
+}
+
+function getCounter(){
+    if(localStorage.counter){
+        localStorage.counter = Number(localStorage.counter) + 1
+    }else{
+        localStorage.counter = 1
+    }
+    return localStorage.counter
+
+}
+
+function parseJsonToClassInstance(classType, json){
+    let jasonData = JSON.parse(json)
+    let values = [];
+    
+    for(let key in jasonData){
+        values.push(jasonData[key])
+    }
+
+    return new classType(...values)
+}
+
+function parseQuery(queryString) {
+    var query = {};
+    var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+    for (var i = 0; i < pairs.length; i++) {
+        var pair = pairs[i].split('=');
+        query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+    }
+    return query.key
+}
+
 var tasksIdCounter = 10;
 
 function addNewTaskToList(ev) {
