@@ -1,7 +1,27 @@
+html, body {
+  margin: 0px;
+  padding: 0px;
+  min-height: 100%;
+  height: 100%;
+}
 #new-project-button {
     font-size: 32px;
 }
 
 .card {
     margin: 5% 5%;
+}
+
+footer {
+    font-size: 16px;
+    background-color: #f8f9fa;
+    position: fixed;
+    height: 100px;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
+footer .container {
+    padding-top: 30px;
 }
