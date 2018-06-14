@@ -32,7 +32,6 @@ export  function singleHtmlElementInsert(file, destinationContainerId, customCon
 
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
-        console.log(xhttp)
         if ((xhttp.readyState == 4) && (xhttp.status == 200)) {
           customContainer.innerHTML = xhttp.responseText;
           destination.appendChild(customContainer);
@@ -40,7 +39,6 @@ export  function singleHtmlElementInsert(file, destinationContainerId, customCon
       }
       xhttp.open("GET", file, false); //temp synch, switch for async/callback
       xhttp.send();
-      console.log("test")
       
     }
     
