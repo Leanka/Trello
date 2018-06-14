@@ -1,44 +1,26 @@
 export class Project {
-    constructor(title, description){
+    constructor(key, title, description){
+        this._key = key;
         this._title = title;
         this._description = description;
-    }
-
-    get title(){
-        return this._title;
-    }
-
-    get discription(){
-        return this._description;
     }
 }
 
 export class List{
-    constructor(id, title) {
-        this._id = id;
+    constructor(key, title, description, parentKey) {
+        this._key = "list-"+key; //change to get ready key
         this._title = title;
+        this._description = description;
+        this._parentKey = parentKey;
     }
 
-    get id() {
-        return this._id;
-    }
-
-    get title() {
-        return this._title;
-    }
 }
 
 export class Task{
-    constructor(id, title) {
-       this._id = id;
+    constructor(key, title, description, parentKey) {
+        this._key = "task-"+key; // change to get ready key
        this._title = title;
-    }
-
-    get id() {
-        return this._id;
-    }
-
-    get title() {
-        return this._title;
+       this._description = description;
+       this._parentKey = parentKey;
     }
 }
