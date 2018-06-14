@@ -4,8 +4,6 @@ import * as models from "../js/models.js";
 var tasksIdCounter = 10;
 
 window.onload = function(){
-    include.includeHTML();
-
     var projectKey = parseQuery(window.location.search);
     if(projectKey){
         localStorage.setItem("current", projectKey)
@@ -13,12 +11,22 @@ window.onload = function(){
         projectKey = localStorage.getItem("current")
     }
 
+    include.includeHTML().then(() => {
+        setCurrentProjectName()
+    })
+
     loadAllLists(projectKey)
 
     document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
     document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
     document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
 
+}
+
+function setCurrentProjectName(){
+    let current = localStorage.getItem("current")
+    let project = parseJsonToClassInstance(models.Project, localStorage.getItem(current));
+    document.getElementById("current-project-title").innerText = project._title;
 }
 
 function loadAllLists(projectKey){
@@ -39,7 +47,6 @@ function getFormData(){
     document.getElementById("myModal").style.display = "none"; //hide form
 
     var projectKey = localStorage.getItem("current");
-    console.log('projectKey :', projectKey);
     createItem(new models.List("list-"+getCounter(),title, projectKey));
 }
 
