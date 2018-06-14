@@ -1,4 +1,5 @@
 export function includeHTML() {
+  return new Promise((resolve, reject) => {
     var z, i, elmnt, file, xhttp, filepath;
     filepath = "data-filepath";
     /*loop through a collection of all HTML elements:*/
@@ -22,10 +23,12 @@ export function includeHTML() {
         xhttp.open("GET", file, true);
         xhttp.send();
         /*exit the function:*/
-        return;
+        break;
       }
     }
-  }
+    resolve() //if function finished, cast, that there was no error and .then can be executed
+  })
+}
 
 export  function singleHtmlElementInsert(file, destinationContainerId, customContainer) {
   var destination = document.getElementById(destinationContainerId);
