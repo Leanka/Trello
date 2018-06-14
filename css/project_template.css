@@ -62,13 +62,6 @@ li:hover span {
 	opacity: 1.0;
 }
 
-#container {
-	box-shadow: 0 0 3px rgba(0,0,0, 0.1);
-	width: 260px;
-	background: #f7f7f7;
-	margin: 100px auto;
-}
-
 .completed {
 	color: gray;
 	text-decoration: line-through;
@@ -76,4 +69,18 @@ li:hover span {
 
 .fa-plus {
 	float: right;
+}
+
+#container {
+	width: 90%;
+	background: white;
+	margin: 100px auto;
+}
+
+.row {
+	width: 90%;
+}
+
+.empty-li {
+	height: 10px;
 }
