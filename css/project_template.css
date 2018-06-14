@@ -77,6 +77,14 @@ li:hover span {
 	margin: 100px auto;
 }
 
+#modal-content2-bt-override {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+}
+
 .row {
 	width: 90%;
 }
