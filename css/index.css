@@ -24,12 +24,12 @@ html, body {
 }
 
 /* Modal Content */
-.modal-content {
+#modal-content-bt-override {
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    width: 50%;
 }
 
 /* The Close Button */
@@ -38,6 +38,7 @@ html, body {
     float: right;
     font-size: 28px;
     font-weight: bold;
+    text-align: right;
 }
 
 .close:hover,
@@ -45,6 +46,8 @@ html, body {
     color: #000;
     text-decoration: none;
     cursor: pointer;
+}
+
 .card {
     margin: 5% 5%;
 }
@@ -60,5 +63,11 @@ footer {
 }
 
 footer .container {
-    padding-top: 30px;
+    padding-top: 32px;
+}
+
+.fa-window-close {
+    font-size: 40px;
+    color: #007bff;
+    margin-bottom: 10px;
 }

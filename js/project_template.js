@@ -1,11 +1,11 @@
 
 import * as include from "../js/htmlInjection.js";
 import * as models from "../js/models.js";
-var projectKey = 
+var projectKey;
+var tasksIdCounter = 10;
+
 window.onload = function(){
     include.includeHTML();
-
-    console.log("dupa")
     projectKey = parseQuery(window.location.search);
     // loadAllLists(data)
 
@@ -27,7 +27,6 @@ function loadAllLists(){
 }
 
 function getFormData(){
-    //????
     let title = document.getElementById("title").value;
 
     document.getElementById("title").value = ""; //clear fields after getting user input
@@ -48,7 +47,14 @@ function insertItem(item){
     var doc = document.getElementById(newProjectId)
 
     doc.getElementsByClassName("list-title")[0].innerText = item._title
-    addKeyListenersToInputs();
+    var inputField = doc.getElementsByClassName("list-title")[0].nextElementSibling;
+    inputField.addEventListener('keypress', function (ev) {
+        var key = ev.which || ev.keyCode;
+        const enterKeyCode = 13;
+        if (key === enterKeyCode) {
+            addNewTaskToList(ev);
+        }
+    });
 }
 
 function createItem(item){
@@ -92,14 +98,17 @@ function parseQuery(queryString) {
     return query.key
 }
 
-var tasksIdCounter = 10;
-
 function addNewTaskToList(ev) {
   var taskTitle = ev.target.value;
-  var listId = ev.target.nextSibling.nextSibling.id;
-  var ul = document.getElementById(listId);
+  var listId = ev.target.parentNode.id;
+  var divChilds = document.getElementById(listId).childNodes;
+  var ul;
+  for(var i=0; i < divChilds.length; i++) {
+      if(divChilds[i].nodeName == "UL") {
+          ul = divChilds[i];
+      }
+  }
   var li = document.createElement("li");
-  
   setLiAttributes(li, listId);
   li.appendChild(document.createTextNode(taskTitle));
   ul.appendChild(li);
