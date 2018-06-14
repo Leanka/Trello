@@ -14,16 +14,33 @@
 </head>
 <body>
     <div data-filepath="project_header.html"></div>
-    <div id="container">
-        	<h1>To-Do List</h1>
-	<input type="text" name="newTask" placeholder="Add new Todo">
-
-	<ul id="todo-list-id">
-		<li> <span><i class="fa fa-trash"></i></span> Go Shopping</li>
-		<li> <span><i class="fa fa-trash"></i></span> Clean room</li>
-		<li> <span><i class="fa fa-trash"></i></span> Visit uncle Bob</li>
-	</ul>
+    <div class="container" id="container">
+        <div class="row">
+            <div class="col">
+                <h1>To-Do List</h1>
+        	    <input type="text" name="newTask" placeholder="Add new Todo">
+        
+        	    <ul class="todo-list" id="todo-list-id1" ondrop=drop(event) ondragover=allowDrop(event)>
+        	        <li class="empty-li"></li>
+        		    <li class="task" id="task1" draggable="true" ondragstart=drag(event)> <span><i class="fa fa-trash"></i></span> Go Shopping</li>
+        		    <li class="task" id="task2" draggable="true" ondragstart=drag(event)> <span><i class="fa fa-trash"></i></span> Clean room</li>
+        		    <li class="task" id="task3" draggable="true" ondragstart=drag(event)> <span><i class="fa fa-trash"></i></span> Visit uncle Bob</li>
+        	    </ul>   
+            </div>
+            <div class="col">
+                <h1>To-Do List 2</h1>
+            	<input type="text" name="newTask" placeholder="Add new Todo">
+            
+            	<ul class="todo-list" id="todo-list-id2" ondrop=drop(event) ondragover=allowDrop(event)>
+            	    <li class="empty-li"></li>
+            	    <li class="task" id="task4" draggable="true" ondragstart=drag(event)> <span><i class="fa fa-trash"></i></span> Go Shopping</li>
+            		<li class="task" id="task5" draggable="true" ondragstart=drag(event)> <span><i class="fa fa-trash"></i></span> Clean room</li>
+            		<li class="task" id="task6" draggable="true" ondragstart=drag(event)> <span><i class="fa fa-trash"></i></span> Visit uncle Bob</li>
+            	</ul>   
+            </div>
+        </div>
     </div>
+    
     <div data-filepath="footer.html"></div>
 </body>
 </html>
