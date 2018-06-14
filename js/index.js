@@ -44,7 +44,6 @@ function getFormData(){
 function createItem(item){
     saveItem(item); //save to local storage
     insertItem(item)//create & insert new card
-    //reload container?
 }
 
 function saveItem(item){
@@ -64,6 +63,9 @@ function insertItem(item){
 
     doc.getElementsByClassName("card-title")[0].innerText = item._title
     doc.getElementsByClassName("card-text")[0].innerText = item._description
+    let myTarget = doc.getElementsByTagName("a")[0]
+    let loc = myTarget.getAttribute("href")
+    myTarget.setAttribute("href", loc + '?key=' + newProjectId); 
 }
 
 function parseJsonToClassInstance(classType, json){
@@ -76,5 +78,4 @@ function parseJsonToClassInstance(classType, json){
 
     return new classType(...values)
 }
-
 
