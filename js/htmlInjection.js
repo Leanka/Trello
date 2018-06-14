@@ -1,4 +1,4 @@
-export default function includeHTML() {
+export function includeHTML() {
     var z, i, elmnt, file, xhttp, filepath;
     filepath = "data-filepath";
     /*loop through a collection of all HTML elements:*/
@@ -26,3 +26,21 @@ export default function includeHTML() {
       }
     }
   }
+
+export  function singleHtmlElementInsert(file, destinationContainerId, customContainer) {
+  var destination = document.getElementById(destinationContainerId);
+
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        console.log(xhttp)
+        if ((xhttp.readyState == 4) && (xhttp.status == 200)) {
+          customContainer.innerHTML = xhttp.responseText;
+          destination.appendChild(customContainer);
+        }
+      }
+      xhttp.open("GET", file, false); //temp synch, switch for async/callback
+      xhttp.send();
+      console.log("test")
+      
+    }
+    
