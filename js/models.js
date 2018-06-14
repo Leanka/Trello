@@ -7,10 +7,9 @@ export class Project {
 }
 
 export class List{
-    constructor(key, title, description, parentKey) {
-        this._key = "list-"+key; //change to get ready key
+    constructor(key, title, parentKey) {
+        this._key = key; //change to get ready key
         this._title = title;
-        this._description = description;
         this._parentKey = parentKey;
     }
 
