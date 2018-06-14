@@ -1,7 +1,6 @@
 
 import * as include from "../js/htmlInjection.js";
 import * as models from "../js/models.js";
-var tasksIdCounter = 10;
 
 window.onload = function(){
     var projectKey = parseQuery(window.location.search);
@@ -129,12 +128,11 @@ function addNewTaskToList(ev) {
   ul.appendChild(li);
   ev.target.value = '';
   addRemoveListeners();
-  tasksIdCounter++;
 }
 
 function setLiAttributes(li, listId) {
   li.setAttribute("class", "task");
-  li.setAttribute("id", "task" + listId + tasksIdCounter);
+  li.setAttribute("id", "task" + listId + getCounter());
   li.setAttribute("draggable", "true");
   li.setAttribute("ondragstart", "drag(event)");
   li.insertAdjacentHTML('beforeend', '<span><i class="fa fa-trash"></i></span>');
