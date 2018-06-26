@@ -71,7 +71,10 @@ function insertItem(item){
     // //fill project card with data
     var doc = document.getElementById(newProjectId)
 
-    doc.getElementsByClassName("list-title")[0].innerText = item._title
+    doc.getElementsByClassName("list-title")[0].innerHTML = '<h1 class="list-title">' 
+                                                            + item._title + 
+                                                            '<i class="list-trash fas fa-trash"></i></h1>';
+                                                       
     var inputField = doc.getElementsByClassName("list-title")[0].nextElementSibling;
     inputField.addEventListener('keypress', function (ev) {
         var key = ev.which || ev.keyCode;
@@ -80,6 +83,16 @@ function insertItem(item){
             addNewTaskToList(ev);
         }
     });
+     doc.getElementsByClassName("list-trash")[0].addEventListener("click", () => {removeToDoList(event)});
+}
+
+function removeToDoList(event) {
+    let list = event.target.parentNode.parentNode.parentNode;
+    let listKey = event.target.parentNode.parentNode.parentNode.id;
+    if(confirm('Remove ToDo List?')) {
+      localStorage.removeItem(listKey);
+      list.parentNode.removeChild(list);
+    }
 }
 
 function createItem(item){
