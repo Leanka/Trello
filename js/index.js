@@ -4,7 +4,7 @@ import * as tools from "../js/commonTools.js";
 
 
 window.onload = function(){
-    tools.loadAllComponents(document.querySelectorAll("[data-filepath]")); //if there would be components from main container, add returning Promis.all
+    tools.loadAllComponents(document.querySelectorAll("[data-filepath]"));
     loadAllProjects();
     
     document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
@@ -27,19 +27,13 @@ function getFormData(){
     document.getElementById("title").value = ""; //clear fields after getting user input
     document.getElementById("description").value = "";
     document.getElementById("myModal").style.display = "none"; //hide form
-    tools.createItem(new models.Project("project-" + tools.getCounter(),title, description), (item)=>{insertItem(item)});
-}
-
-function removeItem(key) {
-    let element = document.getElementById(key);
-    element.parentNode.removeChild(element);
-    localStorage.removeItem(key);
+    tools.createItem(new models.Project(`project-${tools.getCounter()}`, title, description), (item)=>{insertItem(item)});
 }
 
 function insertItem(item){
     //code for inserting project
-    var newProjectId = `${item._key}`;
-    var customContainer = document.createElement("div");
+    let newProjectId = item._key;
+    let customContainer = document.createElement("div");
     customContainer.setAttribute("id", newProjectId)
     
     include.singleHtmlElementInsert("../html/project-card.html", customContainer, "main-project-container").then(() => {
@@ -47,6 +41,10 @@ function insertItem(item){
         let doc = document.getElementById(newProjectId);
         doc.getElementsByClassName("card-title")[0].innerText = item._title
         doc.getElementsByClassName("card-text")[0].innerText = item._description
+
+        let deleteButton = doc.getElementsByClassName("delete-project-button")[0];
+        deleteButton.setAttribute("identifier", newProjectId)
+
         let myTarget = doc.getElementsByTagName("a")[0]
         let loc = myTarget.getAttribute("href")
         myTarget.setAttribute("href", loc + '?key=' + newProjectId);
@@ -67,39 +65,20 @@ function addDropdownMenuActionListeners(doc) {
     let deleteButtons = doc.getElementsByClassName("delete-project-button");
     let editButtons = doc.getElementsByClassName("edit-project-button");
     for(let button of deleteButtons) {
-        button.addEventListener("click", (event) => {deleteProject(event)});
+        button.addEventListener("click", (event) => {tools.removeItem(event, (identifier) => {removeProjectToDoLists(identifier)})});
     }
     //IMPLEMENT EDIT LISTENERS
 }
 
-function deleteProject(event) {
-   let projectKey = event.target.parentNode.parentNode.parentNode.parentNode.parentNode.id;
-   if(confirm('Remove project?')) {
-       removeProjectToDoLists(projectKey);
-       removeItem(projectKey);
-   }
-}
-
 function removeProjectToDoLists(projectKey) {
-    let listsToRemove = getProjectToDoLists(projectKey);
-    for(let list of listsToRemove) {
-        localStorage.removeItem(list);
-    };
-}
-
-function getProjectToDoLists(projectKey) {
-    let listsToRemove = [];
-        for(var i=0, len=localStorage.length; i<len; i++) {
-        let key = localStorage.key(i);
-        if(key.includes("list")) {
-            let value = localStorage[key];
-            let listData = JSON.parse(value);
-            if(listData._parentKey == projectKey) {
-                listsToRemove.push(key);
+    for(let key in localStorage){
+        if(key.includes("list-")){
+            let list = tools.parseJsonToClassInstance(models.List, localStorage.getItem(key));
+            if(list._parentKey == projectKey){
+                localStorage.removeItem(key);
             }
         }
     }
-    return listsToRemove;
 }
 
 function dropdown(item) {
