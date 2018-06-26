@@ -66,7 +66,7 @@ function insertItem(item){
     customContainer.setAttribute("id", newProjectId)
     customContainer.setAttribute("class", "col")
     
-    include.singleHtmlElementInsert("../html/list-template.html", "main-project-container", customContainer)
+    include.singleHtmlElementInsert("../html/list-template.html", customContainer, "main-project-container").then(() =>{
 
     // //fill project card with data
     var doc = document.getElementById(newProjectId)
@@ -83,7 +83,8 @@ function insertItem(item){
             addNewTaskToList(ev);
         }
     });
-     doc.getElementsByClassName("list-trash")[0].addEventListener("click", () => {removeToDoList(event)});
+     doc.getElementsByClassName("list-trash")[0].addEventListener("click", (event) => {removeToDoList(event)});
+    })
 }
 
 function removeToDoList(event) {
