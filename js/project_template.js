@@ -10,9 +10,10 @@ window.onload = function(){
         projectKey = localStorage.getItem("current")
     }
 
-    include.includeHTML().then(() => {
+    loadAllComponents(document.querySelectorAll("[data-filepath]")).then(() => {
         setCurrentProjectName()
     })
+    
 
     loadAllLists(projectKey)
 
@@ -20,6 +21,15 @@ window.onload = function(){
     document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
     document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
 
+}
+
+function loadAllComponents(components){
+    let allPromises = [];
+    components.forEach((component) => {
+        let filename = component.getAttribute("data-filepath");
+        allPromises.push(include.singleHtmlElementInsert(filename, component))
+    })
+    return Promise.all(allPromises);
 }
 
 function setCurrentProjectName(){
