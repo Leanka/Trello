@@ -79,7 +79,10 @@ function insertItem(item){
         console.log('doc :', doc);
         let myTarget = doc.getElementsByTagName("a")[0]
         let loc = myTarget.getAttribute("href")
-        myTarget.setAttribute("href", loc + '?key=' + newProjectId); 
+        myTarget.setAttribute("href", loc + '?key=' + newProjectId);
+        
+        addDropdownToggleListeners(doc);
+        addDropdownMenuActionListeners(doc);
     })
 }
 
