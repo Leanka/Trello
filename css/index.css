@@ -64,15 +64,12 @@ html, body {
 footer {
     font-size: 16px;
     background-color: #f8f9fa;
-    position: fixed;
-    height: 100px;
     bottom: 0;
     width: 100%;
     text-align: center;
-}
-
-footer .container {
-    padding-top: 32px;
+    position: fixed;
+    height : 40px;
+    margin-top : 40px;
 }
 
 .fa-window-close {
