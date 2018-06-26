@@ -63,9 +63,7 @@ function insertItem(item){
     // //fill project card with data
     var doc = document.getElementById(newProjectId)
 
-    doc.getElementsByClassName("list-title")[0].innerHTML = '<h1 class="list-title">' 
-                                                            + item._title + 
-                                                            '<i class="list-trash fas fa-trash"></i></h1>';
+    doc.querySelectorAll("span.title-field")[0].innerText = item._title;
                                                        
     var inputField = doc.getElementsByClassName("list-title")[0].nextElementSibling;
     inputField.addEventListener('keypress', function (ev) {
@@ -75,17 +73,10 @@ function insertItem(item){
             addNewTaskToList(ev);
         }
     });
-     doc.getElementsByClassName("list-trash")[0].addEventListener("click", (event) => {removeToDoList(event)});
+    let trash = doc.getElementsByClassName("list-trash")[0];
+    trash.setAttribute("identifier", newProjectId)
+    trash.addEventListener("click", (event) => {tools.removeItem(event)});
     })
-}
-
-function removeToDoList(event) {
-    let list = event.target.parentNode.parentNode.parentNode;
-    let listKey = event.target.parentNode.parentNode.parentNode.id;
-    if(confirm('Remove ToDo List?')) {
-      localStorage.removeItem(listKey);
-      list.parentNode.removeChild(list);
-    }
 }
 
 function addNewTaskToList(ev) {
@@ -112,17 +103,6 @@ function setLiAttributes(li, listId) {
   li.setAttribute("draggable", "true");
   li.setAttribute("ondragstart", "drag(event)");
   li.insertAdjacentHTML('beforeend', '<span><i class="fa fa-trash"></i></span>');
-}
-
-function removeTask(ev) {
-    ev.currentTarget.parentNode.parentNode.removeChild(ev.currentTarget.parentNode);
-}
-
-function addRemoveListeners() {
-    var spans = document.getElementsByTagName('span');
-    for(var i=0;i<spans.length;i++) {
-	spans[i].onclick = removeTask;
-    }
 }
 
 function addKeyListenersToInputs() {
@@ -153,5 +133,4 @@ window.drop = function(ev) {
     ev.target.parentNode.appendChild(document.getElementById(data));
 }
 
-addKeyListenersToInputs();
-addRemoveListeners();
+addKeyListenersToInputs(); //do onloada?
