@@ -1,16 +1,17 @@
 
 import * as include from "../js/htmlInjection.js";
 import * as models from "../js/models.js";
+import * as tools from "../js/commonTools.js";
 
 window.onload = function(){
-    var projectKey = parseQuery(window.location.search);
+    var projectKey = tools.parseQuery(window.location.search);
     if(projectKey){
         localStorage.setItem("current", projectKey)
     }else{
         projectKey = localStorage.getItem("current")
     }
 
-    loadAllComponents(document.querySelectorAll("[data-filepath]")).then(() => {
+    tools.loadAllComponents(document.querySelectorAll("[data-filepath]")).then(() => {
         setCurrentProjectName()
     })
     
@@ -23,27 +24,18 @@ window.onload = function(){
 
 }
 
-function loadAllComponents(components){
-    let allPromises = [];
-    components.forEach((component) => {
-        let filename = component.getAttribute("data-filepath");
-        allPromises.push(include.singleHtmlElementInsert(filename, component))
-    })
-    return Promise.all(allPromises);
-}
-
 function setCurrentProjectName(){
     let current = localStorage.getItem("current")
-    let project = parseJsonToClassInstance(models.Project, localStorage.getItem(current));
+    let project = tools.parseJsonToClassInstance(models.Project, localStorage.getItem(current));
     document.getElementById("current-project-title").innerText = project._title;
 }
 
 function loadAllLists(projectKey){
     for(let key in localStorage){
         if(key.includes("list")){ //check if item is a list
-            let list = parseJsonToClassInstance(models.List, localStorage.getItem(key));
+            let list = tools.parseJsonToClassInstance(models.List, localStorage.getItem(key));
             if(list._parentKey == projectKey){ //check if list if from current project
-                createItem(parseJsonToClassInstance(models.List, localStorage.getItem(key)))
+                tools.createItem(tools.parseJsonToClassInstance(models.List, localStorage.getItem(key)), (item)=>{insertItem(item)})
             }
         }
     }
@@ -56,7 +48,7 @@ function getFormData(){
     document.getElementById("myModal").style.display = "none"; //hide form
 
     var projectKey = localStorage.getItem("current");
-    createItem(new models.List("list-"+getCounter(),title, projectKey));
+    tools.createItem(new models.List("list-"+tools.getCounter(),title, projectKey), (item)=>{insertItem(item)});
 }
 
 function insertItem(item){
@@ -96,46 +88,6 @@ function removeToDoList(event) {
     }
 }
 
-function createItem(item){
-    saveItem(item); //save to local storage
-    insertItem(item)//create & insert new card
-}
-
-function saveItem(item){
-    localStorage.setItem(item._key, JSON.stringify(item))
-}
-
-function getCounter(){
-    if(localStorage.counter){
-        localStorage.counter = Number(localStorage.counter) + 1
-    }else{
-        localStorage.counter = 1
-    }
-    return localStorage.counter
-
-}
-
-function parseJsonToClassInstance(classType, json){
-    let jasonData = JSON.parse(json)
-    let values = [];
-    
-    for(let key in jasonData){
-        values.push(jasonData[key])
-    }
-
-    return new classType(...values)
-}
-
-function parseQuery(queryString) {
-    var query = {};
-    var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
-    for (var i = 0; i < pairs.length; i++) {
-        var pair = pairs[i].split('=');
-        query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
-    }
-    return query.key
-}
-
 function addNewTaskToList(ev) {
   var taskTitle = ev.target.value;
   var listId = ev.target.parentNode.id;
@@ -156,7 +108,7 @@ function addNewTaskToList(ev) {
 
 function setLiAttributes(li, listId) {
   li.setAttribute("class", "task");
-  li.setAttribute("id", "task" + listId + getCounter());
+  li.setAttribute("id", "task" + listId + tools.getCounter());
   li.setAttribute("draggable", "true");
   li.setAttribute("ondragstart", "drag(event)");
   li.insertAdjacentHTML('beforeend', '<span><i class="fa fa-trash"></i></span>');
