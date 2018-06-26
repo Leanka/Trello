@@ -30,18 +30,22 @@ export function includeHTML() {
   })
 }
 
-export  function singleHtmlElementInsert(file, destinationContainerId, customContainer) {
-  var destination = document.getElementById(destinationContainerId);
+export  function singleHtmlElementInsert(filepath, customContainer, destinationContainerId) {
+  return new Promise((resolve, reject) => {
 
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
         if ((xhttp.readyState == 4) && (xhttp.status == 200)) {
           customContainer.innerHTML = xhttp.responseText;
-          destination.appendChild(customContainer);
+          if(destinationContainerId){
+            document.getElementById(destinationContainerId).appendChild(customContainer);
+          }
+          resolve();
         }
       }
-      xhttp.open("GET", file, false); //temp synch, switch for async/callback
+      xhttp.open("GET", filepath, true);
       xhttp.send();
+    })
       
-    }
+  }
     
