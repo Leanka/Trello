@@ -20,10 +20,10 @@ export function getCounter(){
 }
 
 export function parseQuery(queryString) {
-    var query = {};
-    var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
-    for (var i = 0; i < pairs.length; i++) {
-        var pair = pairs[i].split('=');
+    let query = {};
+    let pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+    for (let i = 0; i < pairs.length; i++) {
+        let pair = pairs[i].split('=');
         query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
     }
     return query.key
@@ -43,6 +43,21 @@ export function parseJsonToClassInstance(classType, json){
 export function createItem(item, insertItem){
     saveItem(item); //save to local storage
     insertItem(item)//create & insert new card
+}
+
+export function removeItem(event, callback) {
+    let identifier = event.target.getAttribute("identifier")
+    console.log('identifier :', identifier);
+    
+    if(confirm('Remove?')) {
+      localStorage.removeItem(identifier);
+      document.getElementById(identifier).remove()
+    }
+
+    if(callback){
+        callback(identifier)
+    }
+
 }
 
 function saveItem(item){
