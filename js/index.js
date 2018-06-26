@@ -8,7 +8,6 @@ window.onload = function(){
     document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
     document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
     document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
-
 }
 
 function loadAllProjects(){
@@ -106,8 +105,31 @@ function addDropdownMenuActionListeners(doc) {
 function deleteProject(event) {
    let projectKey = event.target.parentNode.parentNode.parentNode.parentNode.parentNode.id;
    if(confirm('Remove project?')) {
+       removeProjectToDoLists(projectKey);
        removeItem(projectKey);
    }
+}
+
+function removeProjectToDoLists(projectKey) {
+    let listsToRemove = getProjectToDoLists(projectKey);
+    for(let list of listsToRemove) {
+        localStorage.removeItem(list);
+    };
+}
+
+function getProjectToDoLists(projectKey) {
+    let listsToRemove = [];
+        for(var i=0, len=localStorage.length; i<len; i++) {
+        let key = localStorage.key(i);
+        if(key.includes("list")) {
+            let value = localStorage[key];
+            let listData = JSON.parse(value);
+            if(listData._parentKey == projectKey) {
+                listsToRemove.push(key);
+            }
+        }
+    }
+    return listsToRemove;
 }
 
 function dropdown(item) {
