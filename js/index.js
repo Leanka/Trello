@@ -72,11 +72,8 @@ function insertItem(item){
     include.singleHtmlElementInsert("../html/project-card.html", customContainer, "main-project-container").then(() => {
         //fill project card with data
         let doc = document.getElementById(newProjectId);
-        console.log('doc :', doc);
-        console.log('item._title :', item._title);
         doc.getElementsByClassName("card-title")[0].innerText = item._title
         doc.getElementsByClassName("card-text")[0].innerText = item._description
-        console.log('doc :', doc);
         let myTarget = doc.getElementsByTagName("a")[0]
         let loc = myTarget.getAttribute("href")
         myTarget.setAttribute("href", loc + '?key=' + newProjectId); 
