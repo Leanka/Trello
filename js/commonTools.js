@@ -47,7 +47,6 @@ export function createItem(item, insertItem){
 
 export function removeItem(event, callback) {
     let identifier = event.target.getAttribute("identifier")
-    console.log('identifier :', identifier);
     
     if(confirm('Remove?')) {
       localStorage.removeItem(identifier);
@@ -58,6 +57,12 @@ export function removeItem(event, callback) {
         callback(identifier)
     }
 
+}
+
+export function silentRemove(event){
+    let identifier = event.target.getAttribute("identifier");
+    localStorage.removeItem(identifier);
+    document.getElementById(identifier).remove()
 }
 
 function saveItem(item){
