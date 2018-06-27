@@ -58,12 +58,14 @@ function insertItem(item){
     customContainer.setAttribute("id", newProjectId)
     customContainer.setAttribute("class", "col")
     
-    include.singleHtmlElementInsert("../html/list-template.html", customContainer, "main-project-container").then(() =>{
+    include.singleHtmlElementInsert("../html/list-template.html", customContainer, document.getElementById("main-project-container")).then(() =>{
 
     // //fill project card with data
     var doc = document.getElementById(newProjectId)
 
+
     doc.querySelectorAll("span.title-field")[0].innerText = item._title;
+    doc.getElementsByClassName("todo-list")[0].setAttribute("identifier", newProjectId)
                                                        
     var inputField = doc.getElementsByClassName("list-title")[0].nextElementSibling;
     inputField.addEventListener('keypress', function (ev) {
@@ -73,36 +75,43 @@ function insertItem(item){
             addNewTaskToList(ev);
         }
     });
-    let trash = doc.getElementsByClassName("list-trash")[0];
+    doc.getElementsByTagName("input")[0].setAttribute("identifier", newProjectId); //input
+
+    let trash = doc.getElementsByClassName("list-trash")[0]; //trash
     trash.setAttribute("identifier", newProjectId)
     trash.addEventListener("click", (event) => {tools.removeItem(event)});
     })
 }
+function insertTask(task){
+    var newItemId = task._key;
+
+    let customContainer = document.createElement("li");
+    customContainer.setAttribute("class", "task");
+    customContainer.setAttribute("draggable", "true");
+    customContainer.setAttribute("ondragstart", "drag(event)");
+    customContainer.setAttribute("id", newItemId)
+
+    let destinationContainer = document.querySelectorAll(`#${task._parentKey} ul`)[0];
+
+    include.singleHtmlElementInsert("../html/task-template.html", customContainer, destinationContainer).then(() => {
+        let newTaskContainer = document.getElementById(newItemId);
+        newTaskContainer.getElementsByClassName("task-title")[0].innerText = task._title;
+
+        let trash = newTaskContainer.getElementsByClassName("task-trash")[0];
+        trash.setAttribute("identifier", newItemId)
+        trash.addEventListener("click", (event) => {tools.silentRemove(event)});
+    
+    })
+
+}
 
 function addNewTaskToList(ev) {
   var taskTitle = ev.target.value;
-  var listId = ev.target.parentNode.id;
-  var divChilds = document.getElementById(listId).childNodes;
-  var ul;
-  for(var i=0; i < divChilds.length; i++) {
-      if(divChilds[i].nodeName == "UL") {
-          ul = divChilds[i];
-      }
-  }
-  var li = document.createElement("li");
-  setLiAttributes(li, listId);
-  li.appendChild(document.createTextNode(taskTitle));
-  ul.appendChild(li);
+  var listId = ev.target.getAttribute("identifier");
   ev.target.value = '';
-  addRemoveListeners();
-}
 
-function setLiAttributes(li, listId) {
-  li.setAttribute("class", "task");
-  li.setAttribute("id", "task" + listId + tools.getCounter());
-  li.setAttribute("draggable", "true");
-  li.setAttribute("ondragstart", "drag(event)");
-  li.insertAdjacentHTML('beforeend', '<span><i class="fa fa-trash"></i></span>');
+  tools.createItem(new models.Task(`task-${tools.getCounter()}`, taskTitle, listId), (task) => {insertTask(task)})
+
 }
 
 function addKeyListenersToInputs() {
