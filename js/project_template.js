@@ -63,8 +63,10 @@ function insertItem(item){
     //code for inserting project
     var newProjectId = `${item._key}`;
     var customContainer = document.createElement("div");
-    customContainer.setAttribute("id", newProjectId)
-    customContainer.setAttribute("class", "col")
+    customContainer.setAttribute("id", newProjectId);
+    customContainer.setAttribute("class", "col");
+    customContainer.setAttribute("ondrop", "drop(event)");
+    customContainer.setAttribute("ondragover", "allowDrop(event)");
     
     include.singleHtmlElementInsert("../html/list-template.html", customContainer, "main-project-container").then(() =>{
 
@@ -196,9 +198,15 @@ window.drag = function(ev) {
 
 window.drop = function(ev) {
     ev.preventDefault();
-    var data = ev.dataTransfer.getData("text/html");
+    let data = ev.dataTransfer.getData("text/html");
+    let ulIndex = 4;
     ev.dataTransfer.dropEffect = "move";
-    ev.target.parentNode.appendChild(document.getElementById(data));
+
+    if(ev.target.id.startsWith("list")) {
+         ev.target.childNodes[ulIndex].appendChild(document.getElementById(data));
+    } else if(ev.target.id.includes("list")) {
+         ev.target.parentNode.appendChild(document.getElementById(data));   
+    }
 }
 
 addKeyListenersToInputs();
