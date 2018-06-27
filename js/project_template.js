@@ -35,11 +35,25 @@ function loadAllLists(projectKey){
         if(key.includes("list")){ //check if item is a list
             let list = tools.parseJsonToClassInstance(models.List, localStorage.getItem(key));
             if(list._parentKey == projectKey){ //check if list if from current project
-                tools.createItem(tools.parseJsonToClassInstance(models.List, localStorage.getItem(key)), (item)=>{insertItem(item)})
+                insertItem(list).then((list) => {
+                    loadAllTasks(key);
+                })
             }
         }
     }
 }
+
+function loadAllTasks(listKey){
+    for(let key in localStorage){
+        if(key.includes("task-")){
+            let task = tools.parseJsonToClassInstance(models.Task, localStorage.getItem(key));
+            if(task._parentKey == listKey){
+                insertTask(task);
+            }
+        }
+    }
+}
+
 
 function getFormData(){
     let title = document.getElementById("title").value;
@@ -52,36 +66,39 @@ function getFormData(){
 }
 
 function insertItem(item){
-    //code for inserting project
-    var newProjectId = `${item._key}`;
-    var customContainer = document.createElement("div");
-    customContainer.setAttribute("id", newProjectId)
-    customContainer.setAttribute("class", "col")
+    return new Promise((resolve, reject) => {
+            //code for inserting project
+            let newProjectId = item._key;
+            let customContainer = document.createElement("div");
+            customContainer.setAttribute("id", newProjectId)
+            customContainer.setAttribute("class", "col")
+            
+            include.singleHtmlElementInsert("../html/list-template.html", customContainer, document.getElementById("main-project-container")).then((list) =>{
+                // //fill project card with data
+                list.querySelectorAll("span.title-field")[0].innerText = item._title; //setting title
+                list.getElementsByClassName("todo-list")[0].setAttribute("identifier", newProjectId)
+                                                                
+                var inputField = list.getElementsByClassName("list-title")[0].nextElementSibling; //adding new event
+                inputField.addEventListener('keypress', (event) => {onKeyPress(event)})
+                
+                list.getElementsByTagName("input")[0].setAttribute("identifier", newProjectId); //input
+
+                setTrashSettings(list, newProjectId, true);
+                resolve(list);
+            })
+            .catch(err => console.error(err));
+        })
     
-    include.singleHtmlElementInsert("../html/list-template.html", customContainer, document.getElementById("main-project-container")).then(() =>{
-
-    // //fill project card with data
-    var doc = document.getElementById(newProjectId)
-
-
-    doc.querySelectorAll("span.title-field")[0].innerText = item._title;
-    doc.getElementsByClassName("todo-list")[0].setAttribute("identifier", newProjectId)
-                                                       
-    var inputField = doc.getElementsByClassName("list-title")[0].nextElementSibling;
-    inputField.addEventListener('keypress', function (ev) {
-        var key = ev.which || ev.keyCode;
-        const enterKeyCode = 13;
-        if (key === enterKeyCode) {
-            addNewTaskToList(ev);
-        }
-    });
-    doc.getElementsByTagName("input")[0].setAttribute("identifier", newProjectId); //input
-
-    let trash = doc.getElementsByClassName("list-trash")[0]; //trash
-    trash.setAttribute("identifier", newProjectId)
-    trash.addEventListener("click", (event) => {tools.removeItem(event)});
-    })
 }
+
+function onKeyPress(event){
+    let key = event.which || event.keyCode;
+    const enterKeyCode = 13;
+    if (key === enterKeyCode) {
+        addNewTaskToList(event);
+    }
+}
+
 function insertTask(task){
     var newItemId = task._key;
 
@@ -92,17 +109,21 @@ function insertTask(task){
     customContainer.setAttribute("id", newItemId)
 
     let destinationContainer = document.querySelectorAll(`#${task._parentKey} ul`)[0];
-
-    include.singleHtmlElementInsert("../html/task-template.html", customContainer, destinationContainer).then(() => {
-        let newTaskContainer = document.getElementById(newItemId);
-        newTaskContainer.getElementsByClassName("task-title")[0].innerText = task._title;
-
-        let trash = newTaskContainer.getElementsByClassName("task-trash")[0];
-        trash.setAttribute("identifier", newItemId)
-        trash.addEventListener("click", (event) => {tools.silentRemove(event)});
-    
+    include.singleHtmlElementInsert("../html/task-template.html", customContainer, destinationContainer).then((taskContainer) => {
+        taskContainer.getElementsByClassName("task-title")[0].innerText = task._title;
+        setTrashSettings(taskContainer, newItemId, false)
     })
 
+}
+
+function setTrashSettings(container, itemId, confirmation){
+    let trash = container.getElementsByClassName("del-item")[0];
+    trash.setAttribute("identifier", itemId)
+    if(confirmation){
+        trash.addEventListener("click", (event) => {tools.removeItem(event)});
+    }else{
+        trash.addEventListener("click", (event) => {tools.silentRemove(event)});
+    }
 }
 
 function addNewTaskToList(ev) {
