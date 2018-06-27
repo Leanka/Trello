@@ -49,12 +49,10 @@ export function removeItem(event, callback) {
     let identifier = event.target.getAttribute("identifier")
     
     if(confirm('Remove?')) {
-      localStorage.removeItem(identifier);
-      document.getElementById(identifier).remove()
-    }
-
-    if(callback){
+      silentRemove(event);
+      if(callback){
         callback(identifier)
+        }
     }
 
 }
