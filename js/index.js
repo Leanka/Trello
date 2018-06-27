@@ -15,7 +15,7 @@ window.onload = function(){
 function loadAllProjects(){
     for(let key in localStorage){
         if(key.includes("project")){
-            tools.createItem(tools.parseJsonToClassInstance(models.Project, localStorage.getItem(key)), (item)=>{insertItem(item)})
+            insertItem(tools.parseJsonToClassInstance(models.Project, localStorage.getItem(key)));
         }
     }
 }
