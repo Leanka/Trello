@@ -36,21 +36,20 @@ function insertItem(item){
     let customContainer = document.createElement("div");
     customContainer.setAttribute("id", newProjectId)
     
-    include.singleHtmlElementInsert("../html/project-card.html", customContainer, document.getElementById("main-project-container")).then(() => {
+    include.singleHtmlElementInsert("../html/project-card.html", customContainer, document.getElementById("main-project-container")).then((projectCard) => {
         //fill project card with data
-        let doc = document.getElementById(newProjectId);
-        doc.getElementsByClassName("card-title")[0].innerText = item._title
-        doc.getElementsByClassName("card-text")[0].innerText = item._description
+        projectCard.getElementsByClassName("card-title")[0].innerText = item._title
+        projectCard.getElementsByClassName("card-text")[0].innerText = item._description
 
-        let deleteButton = doc.getElementsByClassName("delete-project-button")[0];
+        let deleteButton = projectCard.getElementsByClassName("delete-project-button")[0];
         deleteButton.setAttribute("identifier", newProjectId)
 
-        let myTarget = doc.getElementsByTagName("a")[0]
+        let myTarget = projectCard.getElementsByTagName("a")[0]
         let loc = myTarget.getAttribute("href")
         myTarget.setAttribute("href", loc + '?key=' + newProjectId);
         
-        addDropdownToggleListeners(doc);
-        addDropdownMenuActionListeners(doc);
+        addDropdownToggleListeners(projectCard);
+        addDropdownMenuActionListeners(projectCard);
     })
 }
 
