@@ -99,11 +99,24 @@ li:hover span {
 
 h1 .fa-trash {
 	float: right;
-	font-size: 24px;
+	font-size: 16px;
 	opacity: 0.7;
 	margin: auto;
 }
 
 h1 .fa-trash:hover {
 	opacity: 1;
+}
+
+#main-project-container .col-3 {
+	min-width: 200px;
+	min-height: 260px;
+	border: 1px solid #2980b9;
+	border-radius: 2%;
+	padding: 0;
+}
+
+.navbar .btn-primary {
+	background: #2980b9;
+	border-color: #2980b9;
 }

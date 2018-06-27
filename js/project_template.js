@@ -64,7 +64,7 @@ function insertItem(item){
     var newProjectId = `${item._key}`;
     var customContainer = document.createElement("div");
     customContainer.setAttribute("id", newProjectId);
-    customContainer.setAttribute("class", "col");
+    customContainer.setAttribute("class", "col-3");
     customContainer.setAttribute("ondrop", "drop(event)");
     customContainer.setAttribute("ondragover", "allowDrop(event)");
     
