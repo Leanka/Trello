@@ -77,3 +77,8 @@ footer {
     color: #007bff;
     margin-bottom: 10px;
 }
+
+.navbar .btn-primary, .card-body .btn-primary {
+	background: #2980b9;
+	border-color: #2980b9;
+}
