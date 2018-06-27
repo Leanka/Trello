@@ -36,7 +36,7 @@ function insertItem(item){
     let customContainer = document.createElement("div");
     customContainer.setAttribute("id", newProjectId)
     
-    include.singleHtmlElementInsert("../html/project-card.html", customContainer, "main-project-container").then(() => {
+    include.singleHtmlElementInsert("../html/project-card.html", customContainer, document.getElementById("main-project-container")).then(() => {
         //fill project card with data
         let doc = document.getElementById(newProjectId);
         doc.getElementsByClassName("card-title")[0].innerText = item._title
