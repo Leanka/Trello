@@ -1,9 +1,10 @@
 import * as include from "../js/htmlInjection.js";
 import * as models from "../js/models.js";
+import * as tools from "../js/commonTools.js";
 
 
 window.onload = function(){
-    loadAllComponents(document.querySelectorAll("[data-filepath]")); //if there would be components from main container, add returning Promis.all
+    tools.loadAllComponents(document.querySelectorAll("[data-filepath]"));
     loadAllProjects();
     
     document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
@@ -11,31 +12,12 @@ window.onload = function(){
     document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
 }
 
-function loadAllComponents(components){
-    let allPromises = [];
-    components.forEach((component) => {
-        let filename = component.getAttribute("data-filepath");
-        allPromises.push(include.singleHtmlElementInsert(filename, component))
-    })
-    return Promise.all(allPromises);
-}
-
 function loadAllProjects(){
     for(let key in localStorage){
         if(key.includes("project")){
-            createItem(parseJsonToClassInstance(models.Project, localStorage.getItem(key)))
+            tools.createItem(tools.parseJsonToClassInstance(models.Project, localStorage.getItem(key)), (item)=>{insertItem(item)})
         }
     }
-}
-
-function getCounter(){
-    if(localStorage.counter){
-        localStorage.counter = Number(localStorage.counter) + 1
-    }else{
-        localStorage.counter = 1
-    }
-    return localStorage.counter
-
 }
 
 function getFormData(){
@@ -45,28 +27,13 @@ function getFormData(){
     document.getElementById("title").value = ""; //clear fields after getting user input
     document.getElementById("description").value = "";
     document.getElementById("myModal").style.display = "none"; //hide form
-    createItem(new models.Project("project-"+getCounter(),title, description));
-}
-
-function createItem(item){
-    saveItem(item); //save to local storage
-    insertItem(item)//create & insert new card
-}
-
-function saveItem(item){
-    localStorage.setItem(item._key, JSON.stringify(item))
-}
-
-function removeItem(key) {
-    let element = document.getElementById(key);
-    element.parentNode.removeChild(element);
-    localStorage.removeItem(key);
+    tools.createItem(new models.Project(`project-${tools.getCounter()}`, title, description), (item)=>{insertItem(item)});
 }
 
 function insertItem(item){
     //code for inserting project
-    var newProjectId = `${item._key}`;
-    var customContainer = document.createElement("div");
+    let newProjectId = item._key;
+    let customContainer = document.createElement("div");
     customContainer.setAttribute("id", newProjectId)
     
     include.singleHtmlElementInsert("../html/project-card.html", customContainer, "main-project-container").then(() => {
@@ -74,6 +41,10 @@ function insertItem(item){
         let doc = document.getElementById(newProjectId);
         doc.getElementsByClassName("card-title")[0].innerText = item._title
         doc.getElementsByClassName("card-text")[0].innerText = item._description
+
+        let deleteButton = doc.getElementsByClassName("delete-project-button")[0];
+        deleteButton.setAttribute("identifier", newProjectId)
+
         let myTarget = doc.getElementsByTagName("a")[0]
         let loc = myTarget.getAttribute("href")
         myTarget.setAttribute("href", loc + '?key=' + newProjectId);
@@ -81,17 +52,6 @@ function insertItem(item){
         addDropdownToggleListeners(doc);
         addDropdownMenuActionListeners(doc);
     })
-}
-
-function parseJsonToClassInstance(classType, json){
-    let jasonData = JSON.parse(json)
-    let values = [];
-    
-    for(let key in jasonData){
-        values.push(jasonData[key])
-    }
-
-    return new classType(...values)
 }
 
 function addDropdownToggleListeners(doc) {
@@ -105,39 +65,20 @@ function addDropdownMenuActionListeners(doc) {
     let deleteButtons = doc.getElementsByClassName("delete-project-button");
     let editButtons = doc.getElementsByClassName("edit-project-button");
     for(let button of deleteButtons) {
-        button.addEventListener("click", (event) => {deleteProject(event)});
+        button.addEventListener("click", (event) => {tools.removeItem(event, (identifier) => {removeProjectToDoLists(identifier)})});
     }
     //IMPLEMENT EDIT LISTENERS
 }
 
-function deleteProject(event) {
-   let projectKey = event.target.parentNode.parentNode.parentNode.parentNode.parentNode.id;
-   if(confirm('Remove project?')) {
-       removeProjectToDoLists(projectKey);
-       removeItem(projectKey);
-   }
-}
-
 function removeProjectToDoLists(projectKey) {
-    let listsToRemove = getProjectToDoLists(projectKey);
-    for(let list of listsToRemove) {
-        localStorage.removeItem(list);
-    };
-}
-
-function getProjectToDoLists(projectKey) {
-    let listsToRemove = [];
-        for(var i=0, len=localStorage.length; i<len; i++) {
-        let key = localStorage.key(i);
-        if(key.includes("list")) {
-            let value = localStorage[key];
-            let listData = JSON.parse(value);
-            if(listData._parentKey == projectKey) {
-                listsToRemove.push(key);
+    for(let key in localStorage){
+        if(key.includes("list-")){
+            let list = tools.parseJsonToClassInstance(models.List, localStorage.getItem(key));
+            if(list._parentKey == projectKey){
+                localStorage.removeItem(key);
             }
         }
     }
-    return listsToRemove;
 }
 
 function dropdown(item) {
