@@ -15,13 +15,11 @@ window.onload = function(){
         setCurrentProjectName()
     })
     
-
     loadAllLists(projectKey)
 
     document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
     document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
     document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
-
 }
 
 function setCurrentProjectName(){
@@ -43,42 +41,45 @@ function loadAllLists(projectKey){
 
 function getFormData(){
     let title = document.getElementById("title").value;
+    if(title.length > 0) {
+        document.getElementById("title").value = ""; //clear fields after getting user input
+        document.getElementById("myModal").style.display = "none"; //hide form
 
-    document.getElementById("title").value = ""; //clear fields after getting user input
-    document.getElementById("myModal").style.display = "none"; //hide form
-
-    var projectKey = localStorage.getItem("current");
-    tools.createItem(new models.List("list-"+tools.getCounter(),title, projectKey), (item)=>{insertItem(item)});
+        var projectKey = localStorage.getItem("current");
+        tools.createItem(new models.List("list-"+tools.getCounter(),title, projectKey), (item)=>{insertItem(item)});
+    } else {
+        alert("List title cannot be empty!");
+    }
 }
 
-function insertItem(item){
-    //code for inserting project
-    var newProjectId = `${item._key}`;
-    var customContainer = document.createElement("div");
-    customContainer.setAttribute("id", newProjectId);
+function insertItem(item) {
+    //code for inserting list
+    let newListId = `${item._key}`;
+    let customContainer = document.createElement("div");
+    customContainer.setAttribute("id", newListId);
     customContainer.setAttribute("class", "col-3");
     customContainer.setAttribute("ondrop", "drop(event)");
     customContainer.setAttribute("ondragover", "allowDrop(event)");
     
     include.singleHtmlElementInsert("../html/list-template.html", customContainer, "main-project-container").then(() =>{
 
-    // //fill project card with data
-    var doc = document.getElementById(newProjectId)
+    // create new list
+    let doc = document.getElementById(newListId);
 
     doc.querySelectorAll("span.title-field")[0].innerText = item._title;
                                                        
-    var inputField = doc.getElementsByClassName("list-title")[0].nextElementSibling;
+    let inputField = doc.getElementsByClassName("list-title")[0].nextElementSibling;
     inputField.addEventListener('keypress', function (ev) {
-        var key = ev.which || ev.keyCode;
+        let key = ev.which || ev.keyCode;
         const enterKeyCode = 13;
         if (key === enterKeyCode) {
             addNewTaskToList(ev);
         }
     });
     let trash = doc.getElementsByClassName("list-trash")[0];
-    trash.setAttribute("identifier", newProjectId)
+    trash.setAttribute("identifier", newListId)
     trash.addEventListener("click", (event) => {tools.removeItem(event)});
-    })
+    });
 }
 
 function addNewTaskToList(ev) {
@@ -93,10 +94,14 @@ function addNewTaskToList(ev) {
   }
   var li = document.createElement("li");
   setLiAttributes(li, listId);
-  li.appendChild(document.createTextNode(taskTitle));
-  ul.appendChild(li);
-  ev.target.value = '';
-  addRemoveListeners();
+  if(taskTitle.length > 0) {
+      li.appendChild(document.createTextNode(taskTitle));
+      ul.appendChild(li);
+      ev.target.value = '';
+  } else {
+      alert("Task name cannot be empty!");
+  }
+  //addRemoveListeners();
 }
 
 function setLiAttributes(li, listId) {
