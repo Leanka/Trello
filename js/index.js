@@ -11,7 +11,6 @@ window.onload = function(){
     document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
     document.getElementById("myModal").addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {getFormData()})})
     document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
-
 }
 
 function loadAllProjects(){
@@ -23,14 +22,15 @@ function loadAllProjects(){
 }
 
 function getFormData(){
-    let title = document.getElementById("title").value;
-    let description = document.getElementById("description").value;
+    let title = document.getElementById("title").value.trim();
+    let description = document.getElementById("description").value.trim();
     
-    if(title.length > 0 && description.length > 0) {
+    if((title.length > 0) && (description.length > 0)) {
         document.getElementById("title").value = ""; //clear fields after getting user input
         document.getElementById("description").value = "";
         document.getElementById("myModal").style.display = "none"; //hide form
         tools.createItem(new models.Project(`project-${tools.getCounter()}`, title, description), (item)=>{insertItem(item)});
+        document.getElementById("new-project-button").focus()
     } else {
         alert("Please enter both project title and description!");
     }
