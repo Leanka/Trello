@@ -43,7 +43,7 @@ function insertItem(item){
 
         let deleteButton = projectCard.getElementsByClassName("delete-project-button")[0];
         deleteButton.setAttribute("identifier", newProjectId)
-        // deleteButton.addEventListener("click", (event) => {tools.removeItem(event, (identifier) => {removeProjectToDoLists(identifier)})})
+        // deleteButton.addEventListener("click", (event) => {tools.removeItem(event, true)})
 
         let myTarget = projectCard.getElementsByTagName("a")[0]
         let loc = myTarget.getAttribute("href")
