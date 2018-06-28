@@ -5,6 +5,7 @@
     <title>Trelolo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="../css/index.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/footer.css" />
     <link rel="stylesheet" type="text/css" href="//stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <script src="../js/index.js" type="module"></script>
@@ -22,15 +23,15 @@
 
         <form class="border rounded p-3">
         <div class="form-group">
-            <label for="formGroupExampleInput">Title</label>
-            <input id="title" type="text" class="form-control" id="formGroupExampleInput" placeholder="Example input">
+            <label for="title">Title</label>
+            <input id="title" class="form-control" type="text" placeholder="Enter project title" required/>
         </div>
         <div class="form-group">
-            <label for="formGroupExampleInput2">Description</label>
-            <input type="text" id="description" type="text" class="form-control" id="formGroupExampleInput2" placeholder="Another input">
-            </div>
+            <label for="description">Description</label>
+            <textarea class="form-control" rows="5" id="description" placeholder="Enter description"></textarea>
+        </div>
         <div class="form-group">
-            <button id="modal-submit" type="button" class="btn btn-primary btn-block">Create</button>
+            <button id="modal-submit" type="submit" class="btn btn-primary btn-block">Create</button>
         </div>
     </form>
 

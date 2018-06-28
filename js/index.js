@@ -23,11 +23,15 @@ function loadAllProjects(){
 function getFormData(){
     let title = document.getElementById("title").value;
     let description = document.getElementById("description").value;
-
-    document.getElementById("title").value = ""; //clear fields after getting user input
-    document.getElementById("description").value = "";
-    document.getElementById("myModal").style.display = "none"; //hide form
-    tools.createItem(new models.Project(`project-${tools.getCounter()}`, title, description), (item)=>{insertItem(item)});
+    
+    if(title.length > 0 && description.length > 0) {
+        document.getElementById("title").value = ""; //clear fields after getting user input
+        document.getElementById("description").value = "";
+        document.getElementById("myModal").style.display = "none"; //hide form
+        tools.createItem(new models.Project(`project-${tools.getCounter()}`, title, description), (item)=>{insertItem(item)});
+    } else {
+        alert("Please enter both project title and description!");
+    }
 }
 
 function insertItem(item){
