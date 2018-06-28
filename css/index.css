@@ -61,17 +61,6 @@ html, body {
     margin: 5% 5%;
 }
 
-footer {
-    font-size: 16px;
-    background-color: #f8f9fa;
-    bottom: 0;
-    width: 100%;
-    text-align: center;
-    position: fixed;
-    height : 40px;
-    margin-top : 40px;
-}
-
 .fa-window-close {
     font-size: 40px;
     color: #007bff;
