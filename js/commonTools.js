@@ -54,7 +54,19 @@ export function removeItem(event, callback) {
         callback(identifier)
         }
     }
+}
 
+function removeNestedResources(itemKey) {
+    for(let key in localStorage){
+        if(key.includes("list-") || key.includes("task-")){
+            let item = JSON.parse(localStorage.getItem(key))
+            if(item && (item._parentKey == itemKey)){
+                localStorage.removeItem(key);
+                removeProjectToDoLists(item._key);
+
+            }
+        }
+    }
 }
 
 export function silentRemove(event){

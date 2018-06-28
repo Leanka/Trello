@@ -70,19 +70,6 @@ function addDropdownMenuActionListeners(doc) {
     //IMPLEMENT EDIT LISTENERS
 }
 
-function removeProjectToDoLists(itemKey) {
-    for(let key in localStorage){
-        if(key.includes("list-") || key.includes("task-")){
-            let item = JSON.parse(localStorage.getItem(key))
-            if(item && (item._parentKey == itemKey)){
-                localStorage.removeItem(key);
-                removeProjectToDoLists(item._key);
-
-            }
-        }
-    }
-}
-
 function dropdown(item) {
     let parent = item.parentNode;
     let menuIndex = 3;
