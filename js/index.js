@@ -9,17 +9,9 @@ window.onload = function(){
     
     document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
     document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
-    document.getElementById("myModal").addEventListener('keypress', (event) => {onKeyPress(event, () => {getFormData()})})
+    document.getElementById("myModal").addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {getFormData()})})
     document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
 
-}
-
-function onKeyPress(event, callback){
-    let key = event.which || event.keyCode;
-    const enterKeyCode = 13;
-    if (key === enterKeyCode) {
-        callback()
-    }
 }
 
 function loadAllProjects(){
