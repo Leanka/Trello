@@ -1,3 +1,5 @@
+import * as tools from "../js/commonTools.js"
+
 window.onload = function() {
-    document.getElementsByClassName("continue")[0].focus();
+    document.addEventListener("keypress", (event) => { tools.onKeyPress(event, () => { window.location.replace("index.html")})})
 }
