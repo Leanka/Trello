@@ -45,7 +45,7 @@ input:focus {
 	outline: none;
 }
 
-li span {
+.container li span {
 	background: #e74c3c;
 	height: 40px;
 	margin-right: 20px;
@@ -61,7 +61,11 @@ p {
 	display: inline;
 }
 
-li:hover span {
+.nav-item {
+	background: #f7f7f7;
+}
+
+.container li:hover span {
 	width: 40px;
 	opacity: 1.0;
 }
@@ -123,4 +127,8 @@ h1 .fa-trash:hover {
 .navbar .btn-primary {
 	background: #2980b9;
 	border-color: #2980b9;
+}
+
+#current-project-title {
+	margin-left: 10px;
 }
