@@ -147,3 +147,7 @@ h1 .fa-trash:hover {
 	max-width: 25%;
 	margin-left: -15px;
 }
+
+a.navbar-brand:hover {
+	opacity: .5;
+}

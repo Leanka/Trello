@@ -76,3 +76,7 @@ html, body {
     width: 70%;
     margin: 0 auto;
 }
+
+a.navbar-brand:hover {
+	opacity: .5;
+}
