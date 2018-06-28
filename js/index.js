@@ -65,7 +65,7 @@ function addDropdownMenuActionListeners(doc) {
     let deleteButtons = doc.getElementsByClassName("delete-project-button");
     let editButtons = doc.getElementsByClassName("edit-project-button");
     for(let button of deleteButtons) {
-        button.addEventListener("click", (event) => {tools.removeItem(event, (identifier) => {removeProjectToDoLists(identifier)})});
+        button.addEventListener("click", (event) => {tools.removeItem(event, true)});
     }
     //IMPLEMENT EDIT LISTENERS
 }
