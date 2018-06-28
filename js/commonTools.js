@@ -45,19 +45,34 @@ export function createItem(item, insertItem){
     insertItem(item)//create & insert new card
 }
 
-export function removeItem(event, callback) {
+export function removeItem(event, hasNestedResources) {
     let identifier = event.target.getAttribute("identifier")
-    console.log('identifier :', identifier);
     
     if(confirm('Remove?')) {
-      localStorage.removeItem(identifier);
-      document.getElementById(identifier).remove()
+      silentRemove(event);
+      if(hasNestedResources){
+        removeNestedResources(identifier)
+        }
     }
+}
 
-    if(callback){
-        callback(identifier)
+function removeNestedResources(itemKey) {
+    for(let key in localStorage){
+        if(key.includes("list-") || key.includes("task-")){
+            let item = JSON.parse(localStorage.getItem(key))
+            if(item && (item._parentKey == itemKey)){
+                localStorage.removeItem(key);
+                removeNestedResources(item._key);
+
+            }
+        }
     }
+}
 
+export function silentRemove(event){
+    let identifier = event.target.getAttribute("identifier");
+    localStorage.removeItem(identifier);
+    document.getElementById(identifier).remove()
 }
 
 function saveItem(item){

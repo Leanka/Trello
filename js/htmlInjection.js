@@ -4,12 +4,13 @@ export  function singleHtmlElementInsert(filepath, customContainer, destinationC
 
       let xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
+        
         if ((xhttp.readyState == 4) && (xhttp.status == 200)) {
           customContainer.innerHTML = xhttp.responseText;
-          if(destinationContainerId){
-            document.getElementById(destinationContainerId).appendChild(customContainer);
-          }
-          resolve();
+    
+          if(destinationContainerId)
+            destinationContainerId.appendChild(customContainer);
+            resolve(customContainer);
         }
       }
       xhttp.open("GET", filepath, true);

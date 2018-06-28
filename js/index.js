@@ -15,7 +15,7 @@ window.onload = function(){
 function loadAllProjects(){
     for(let key in localStorage){
         if(key.includes("project")){
-            tools.createItem(tools.parseJsonToClassInstance(models.Project, localStorage.getItem(key)), (item)=>{insertItem(item)})
+            insertItem(tools.parseJsonToClassInstance(models.Project, localStorage.getItem(key)));
         }
     }
 }
@@ -40,21 +40,21 @@ function insertItem(item){
     let customContainer = document.createElement("div");
     customContainer.setAttribute("id", newProjectId)
     
-    include.singleHtmlElementInsert("../html/project-card.html", customContainer, "main-project-container").then(() => {
+    include.singleHtmlElementInsert("../html/project-card.html", customContainer, document.getElementById("main-project-container")).then((projectCard) => {
         //fill project card with data
-        let doc = document.getElementById(newProjectId);
-        doc.getElementsByClassName("card-title")[0].innerText = item._title
-        doc.getElementsByClassName("card-text")[0].innerText = item._description
+        projectCard.getElementsByClassName("card-title")[0].innerText = item._title
+        projectCard.getElementsByClassName("card-text")[0].innerText = item._description
 
-        let deleteButton = doc.getElementsByClassName("delete-project-button")[0];
+        let deleteButton = projectCard.getElementsByClassName("delete-project-button")[0];
         deleteButton.setAttribute("identifier", newProjectId)
+        // deleteButton.addEventListener("click", (event) => {tools.removeItem(event, true)})
 
-        let myTarget = doc.getElementsByTagName("a")[0]
+        let myTarget = projectCard.getElementsByTagName("a")[0]
         let loc = myTarget.getAttribute("href")
         myTarget.setAttribute("href", loc + '?key=' + newProjectId);
         
-        addDropdownToggleListeners(doc);
-        addDropdownMenuActionListeners(doc);
+        addDropdownToggleListeners(projectCard);
+        addDropdownMenuActionListeners(projectCard);
     })
 }
 
@@ -69,20 +69,9 @@ function addDropdownMenuActionListeners(doc) {
     let deleteButtons = doc.getElementsByClassName("delete-project-button");
     let editButtons = doc.getElementsByClassName("edit-project-button");
     for(let button of deleteButtons) {
-        button.addEventListener("click", (event) => {tools.removeItem(event, (identifier) => {removeProjectToDoLists(identifier)})});
+        button.addEventListener("click", (event) => {tools.removeItem(event, true)});
     }
     //IMPLEMENT EDIT LISTENERS
-}
-
-function removeProjectToDoLists(projectKey) {
-    for(let key in localStorage){
-        if(key.includes("list-")){
-            let list = tools.parseJsonToClassInstance(models.List, localStorage.getItem(key));
-            if(list._parentKey == projectKey){
-                localStorage.removeItem(key);
-            }
-        }
-    }
 }
 
 function dropdown(item) {
