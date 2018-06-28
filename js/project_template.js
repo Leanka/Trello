@@ -168,11 +168,13 @@ window.drop = function(ev) {
     let ulIndex = 4;
     ev.dataTransfer.dropEffect = "move";
 
+    let destinationNode;
     if(ev.target.id.startsWith("list")) {
          ev.target.childNodes[ulIndex].appendChild(document.getElementById(data));
     } else if(ev.target.id.includes("task")) {
          ev.target.parentNode.appendChild(document.getElementById(data));   
     }
+
 }
 
 addKeyListenersToInputs(); //do onloada
