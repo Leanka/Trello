@@ -167,10 +167,12 @@ window.drop = function(ev) {
     let data = ev.dataTransfer.getData("text/html");
     let ulIndex = 4;
     ev.dataTransfer.dropEffect = "move";
+    console.log(ev.target.id);
 
     if(ev.target.id.startsWith("list")) {
          ev.target.childNodes[ulIndex].appendChild(document.getElementById(data));
-    } else if(ev.target.id.includes("list")) {
+    } else if(ev.target.id.includes("task")) {
+        console.log("im here");
          ev.target.parentNode.appendChild(document.getElementById(data));   
     }
 }
