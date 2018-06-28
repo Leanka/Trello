@@ -55,12 +55,12 @@ function loadAllTasks(listKey){
 
 
 function getFormData(){
-    let title = document.getElementById("title").value;
+    let title = document.getElementById("title").value.trim();
     if(title.length > 0) {
         document.getElementById("title").value = ""; //clear fields after getting user input
         document.getElementById("myModal").style.display = "none"; //hide form
 
-        var projectKey = localStorage.getItem("current");
+        let projectKey = localStorage.getItem("current");
         tools.createItem(new models.List("list-"+tools.getCounter(),title, projectKey), (item)=>{insertItem(item)});
     } else {
         alert("List title cannot be empty!");
