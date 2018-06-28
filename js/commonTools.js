@@ -75,6 +75,6 @@ export function silentRemove(event){
     document.getElementById(identifier).remove()
 }
 
-function saveItem(item){
+export function saveItem(item){
     localStorage.setItem(item._key, JSON.stringify(item))
 }

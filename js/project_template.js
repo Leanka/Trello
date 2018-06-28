@@ -168,11 +168,23 @@ window.drop = function(ev) {
     let ulIndex = 4;
     ev.dataTransfer.dropEffect = "move";
 
+    let destinationNode;
     if(ev.target.id.startsWith("list")) {
-         ev.target.childNodes[ulIndex].appendChild(document.getElementById(data));
+        destinationNode = ev.target.childNodes[ulIndex];
+         destinationNode.appendChild(document.getElementById(data));
     } else if(ev.target.id.includes("task")) {
-         ev.target.parentNode.appendChild(document.getElementById(data));   
+        destinationNode = ev.target.parentNode;
+         destinationNode.appendChild(document.getElementById(data)); 
     }
+     let destinationListId = destinationNode.getAttribute("identifier");
+     updateTaskPosition(data, destinationListId);
+
+}
+
+function updateTaskPosition(taskKey, listKey){
+    let task = tools.parseJsonToClassInstance(models.Task, localStorage.getItem(taskKey));
+    task._parentKey = listKey;
+    tools.saveItem(task);
 }
 
 addKeyListenersToInputs(); //do onloada
