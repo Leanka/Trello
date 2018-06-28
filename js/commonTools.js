@@ -78,3 +78,11 @@ export function silentRemove(event){
 export function saveItem(item){
     localStorage.setItem(item._key, JSON.stringify(item))
 }
+
+export function onKeyPress(event, callback){
+    let key = event.which || event.keyCode;
+    const enterKeyCode = 13;
+    if (key === enterKeyCode) {
+        callback()
+    }
+}

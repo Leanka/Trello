@@ -19,6 +19,7 @@ window.onload = function(){
 
     document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
     document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
+    document.getElementById("myModal").addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {getFormData()})})
     document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
 }
 
@@ -83,7 +84,7 @@ function insertItem(item){
                 list.getElementsByClassName("todo-list")[0].setAttribute("identifier", newProjectId)
                                                                 
                 var inputField = list.getElementsByClassName("list-title")[0].nextElementSibling; //adding new event
-                inputField.addEventListener('keypress', (event) => {onKeyPress(event)})
+                inputField.addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {addNewTaskToList(event)})})
                 
                 list.getElementsByTagName("input")[0].setAttribute("identifier", newProjectId); //input
 
@@ -93,14 +94,6 @@ function insertItem(item){
             .catch(err => console.error(err));
         })
     
-}
-
-function onKeyPress(event){
-    let key = event.which || event.keyCode;
-    const enterKeyCode = 13;
-    if (key === enterKeyCode) {
-        addNewTaskToList(event);
-    }
 }
 
 function insertTask(task){
