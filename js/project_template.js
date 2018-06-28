@@ -170,7 +170,7 @@ window.drop = function(ev) {
 
     if(ev.target.id.startsWith("list")) {
          ev.target.childNodes[ulIndex].appendChild(document.getElementById(data));
-    } else if(ev.target.id.includes("list")) {
+    } else if(ev.target.id.includes("task")) {
          ev.target.parentNode.appendChild(document.getElementById(data));   
     }
 }
