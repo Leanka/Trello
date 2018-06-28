@@ -14,7 +14,6 @@ window.onload = function(){
     tools.loadAllComponents(document.querySelectorAll("[data-filepath]")).then(() => {
         setCurrentProjectName()
     })
-    
 
     loadAllLists(projectKey)
 
@@ -120,7 +119,7 @@ function setTrashSettings(container, itemId, confirmation){
     let trash = container.getElementsByClassName("del-item")[0];
     trash.setAttribute("identifier", itemId)
     if(confirmation){
-        trash.addEventListener("click", (event) => {tools.removeItem(event)});
+        trash.addEventListener("click", (event) => {tools.removeItem(event, confirmation)});
     }else{
         trash.addEventListener("click", (event) => {tools.silentRemove(event)});
     }
