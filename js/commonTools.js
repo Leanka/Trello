@@ -45,13 +45,13 @@ export function createItem(item, insertItem){
     insertItem(item)//create & insert new card
 }
 
-export function removeItem(event, callback) {
+export function removeItem(event, hasNestedResources) {
     let identifier = event.target.getAttribute("identifier")
     
     if(confirm('Remove?')) {
       silentRemove(event);
-      if(callback){
-        callback(identifier)
+      if(hasNestedResources){
+        removeNestedResources(identifier)
         }
     }
 }
@@ -62,7 +62,7 @@ function removeNestedResources(itemKey) {
             let item = JSON.parse(localStorage.getItem(key))
             if(item && (item._parentKey == itemKey)){
                 localStorage.removeItem(key);
-                removeProjectToDoLists(item._key);
+                removeNestedResources(item._key);
 
             }
         }
