@@ -43,6 +43,7 @@ function insertItem(item){
 
         let deleteButton = projectCard.getElementsByClassName("delete-project-button")[0];
         deleteButton.setAttribute("identifier", newProjectId)
+        // deleteButton.addEventListener("click", (event) => {tools.removeItem(event, (identifier) => {removeProjectToDoLists(identifier)})})
 
         let myTarget = projectCard.getElementsByTagName("a")[0]
         let loc = myTarget.getAttribute("href")
@@ -69,12 +70,14 @@ function addDropdownMenuActionListeners(doc) {
     //IMPLEMENT EDIT LISTENERS
 }
 
-function removeProjectToDoLists(projectKey) {
+function removeProjectToDoLists(itemKey) {
     for(let key in localStorage){
-        if(key.includes("list-")){
-            let list = tools.parseJsonToClassInstance(models.List, localStorage.getItem(key));
-            if(list._parentKey == projectKey){
+        if(key.includes("list-") || key.includes("task-")){
+            let item = JSON.parse(localStorage.getItem(key))
+            if(item && (item._parentKey == itemKey)){
                 localStorage.removeItem(key);
+                removeProjectToDoLists(item._key);
+
             }
         }
     }
