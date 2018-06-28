@@ -56,6 +56,7 @@ function loadAllTasks(listKey){
 
 function getFormData(){
     let title = document.getElementById("title").value.trim();
+    
     if(title.length > 0) {
         document.getElementById("title").value = ""; //clear fields after getting user input
         document.getElementById("myModal").style.display = "none"; //hide form
