@@ -7,9 +7,10 @@ footer {
     position: fixed;
     height : 40px;
     color: #777;
-    border: 13px solid #f8f8f8;
+    border: 3px solid #f8f8f8;
 }
 
 footer p {
     margin-top: 10px;
+    
 }

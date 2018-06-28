@@ -57,6 +57,10 @@ li span {
 	opacity: 0;
 }
 
+p {
+	display: inline;
+}
+
 li:hover span {
 	width: 40px;
 	opacity: 1.0;
