@@ -9,33 +9,12 @@ var localUserId = "5b4b4e5c7bcc4f69875e1c51"
 
 window.onload = function(){
     tools.loadAllComponents(document.querySelectorAll("[data-filepath]"));
-    loadAllProjects();
+    tools.loadAllProjects(localUserId, (item) => {insertItem(item)});
     
     document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
     document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
     document.getElementById("myModal").addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {getFormData()})})
     document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
-}
-
-function loadAllProjects(){
-    fetch(`${localBackend}/users/${localUserId}/projects`)
-    .then((resp) => {
-        return resp.json()
-    })
-    .then((json) => {
-        for(let project of json){
-            let current = new models.Project(
-                project._id,
-                project.title,
-                project.description,
-                project.author.id
-            )
-            insertItem(current);
-        }
-    })
-    .catch((err) => {
-        console.log('err :', err);
-    })
 }
 
 function getFormData(){
@@ -90,7 +69,7 @@ function addDropdownMenuActionListeners(doc) {
     let deleteButtons = doc.getElementsByClassName("delete-project-button");
     let editButtons = doc.getElementsByClassName("edit-project-button");
     for(let button of deleteButtons) {
-        button.addEventListener("click", (event) => {tools.removeItem(event, true)});
+        button.addEventListener("click", (event) => {tools.removeItem(event)});
     }
     //IMPLEMENT EDIT LISTENERS
 }

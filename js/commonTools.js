@@ -12,6 +12,27 @@ export function loadAllComponents(components){
     return Promise.all(allPromises);
 }
 
+export function loadAllProjects(localUserId, insertItem){
+    fetch(`${localBackend}/users/${localUserId}/projects`)
+    .then((resp) => {
+        return resp.json()
+    })
+    .then((json) => {
+        for(let project of json){
+            let current = new models.Project(
+                project._id,
+                project.title,
+                project.description,
+                project.author.id
+            )
+            insertItem(current);
+        }
+    })
+    .catch((err) => {
+        console.log('err :', err);
+    })
+}
+
 export function getCounter(){
     if(localStorage.counter){
         localStorage.counter = Number(localStorage.counter) + 1
@@ -19,7 +40,6 @@ export function getCounter(){
         localStorage.counter = 1
     }
     return localStorage.counter
-
 }
 
 export function parseQuery(queryString) {
