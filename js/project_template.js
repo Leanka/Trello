@@ -4,23 +4,24 @@ import * as models from "../js/models.js";
 import * as tools from "../js/commonTools.js";
 
 window.onload = function(){
-    var projectKey = tools.parseQuery(window.location.search);
-    if(projectKey){
-        localStorage.setItem("current", projectKey)
-    }else{
-        projectKey = localStorage.getItem("current")
-    }
+    console.log(window.location.search);
+    // var projectKey = tools.parseQuery(window.location.search);
+    // if(projectKey){
+    //     localStorage.setItem("current", projectKey)
+    // }else{       
+    //     projectKey = localStorage.getItem("current")
+    // }
 
-    tools.loadAllComponents(document.querySelectorAll("[data-filepath]")).then(() => {
-        setCurrentProjectName()
-    })
+    // tools.loadAllComponents(document.querySelectorAll("[data-filepath]")).then(() => {
+    //     setCurrentProjectName()
+    // })
     
-    loadAllLists(projectKey)
+    // loadAllLists(projectKey)
 
-    document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
-    document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
-    document.getElementById("myModal").addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {getFormData()})})
-    document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
+    // document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
+    // document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
+    // document.getElementById("myModal").addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {getFormData()})})
+    // document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
 }
 
 function setCurrentProjectName(){
