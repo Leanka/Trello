@@ -31,7 +31,6 @@ function loadAllProjects(){
                 project.author.id
             )
             insertItem(current);
-            console.log('item :', current);
         }
     })
     .catch((err) => {
@@ -48,7 +47,9 @@ function getFormData(){
         document.getElementById("description").value = "";
         document.getElementById("myModal").style.display = "none"; //hide form
         document.getElementById("new-project-button").focus()
-        tools.createItem(new models.Project(`project-${tools.getCounter()}`, title, description), (item)=>{insertItem(item)});
+
+        let item = {"title": title, "description":description, "author":{"id":localUserId}}
+        tools.createItem(item, (item)=>{insertItem(item)});
     } else {
         alert("Please enter both project title and description!");
     }
