@@ -1,8 +1,9 @@
 export class Project {
-    constructor(key, title, description){
+    constructor(key, title, description, parentKey){
         this._key = key;
         this._title = title;
         this._description = description;
+        this._parentKey = parentKey;
     }
 }
 
