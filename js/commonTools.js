@@ -67,19 +67,6 @@ export function removeItem(event) {
     }
 }
 
-function removeNestedResources(itemKey) {
-    for(let key in localStorage){
-        if(key.includes("list-") || key.includes("task-")){
-            let item = JSON.parse(localStorage.getItem(key))
-            if(item && (item._parentKey == itemKey)){
-                localStorage.removeItem(key);
-                removeNestedResources(item._key);
-
-            }
-        }
-    }
-}
-
 export function silentRemove(event){
     let identifier = event.target.getAttribute("identifier");
     fetch(`${localBackend}/projects/${identifier}`,{
