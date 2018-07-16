@@ -4,10 +4,14 @@ import * as tools from "../js/commonTools.js";
 var backend = "https://safe-crag-70832.herokuapp.com";
 var backendUserId = "5b4c702aee258500141cd48c";
 var localBackend = "http://192.168.0.45:8088";
-var localUserId = "5b4b4e5c7bcc4f69875e1c51"
+// var localUserId = "5b4b4e5c7bcc4f69875e1c51"
+var localUserId;
+var projectPath = '../project/';
+var projectCardTemplatePath = "../html/project-card.html";
 
 
 window.onload = function(){
+    setCurrentUserId();
     tools.loadAllComponents(document.querySelectorAll("[data-filepath]"));
     tools.loadAllProjects(localUserId, (item) => {insertItem(item)});
 
@@ -16,6 +20,10 @@ window.onload = function(){
     document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
     document.getElementById("myModal").addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {getFormData()})})
     document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
+}
+function setCurrentUserId(){ //wrap into promiss
+    let pathnameElements = window.location.pathname.split('/');
+    localUserId = pathnameElements[pathnameElements.length - 1];
 }
 
 function getFormData(){
@@ -41,7 +49,7 @@ function insertItem(item){
     let customContainer = document.createElement("div");
     customContainer.setAttribute("id", newProjectId)
     
-    include.singleHtmlElementInsert("../html/project-card.html", customContainer, document.getElementById("main-project-container")).then((projectCard) => {
+    include.singleHtmlElementInsert(projectCardTemplatePath, customContainer, document.getElementById("main-project-container")).then((projectCard) => {
         //fill project card with data
         projectCard.getElementsByClassName("card-title")[0].innerText = item._title
         projectCard.getElementsByClassName("card-text")[0].innerText = item._description
@@ -52,7 +60,7 @@ function insertItem(item){
 
         let myTarget = projectCard.getElementsByTagName("a")[0]
         let loc = myTarget.getAttribute("href")
-        myTarget.setAttribute("href", loc + '?project=' + newProjectId);
+        myTarget.setAttribute("href", projectPath + newProjectId);
         
         addDropdownToggleListeners(projectCard);
         addDropdownMenuActionListeners(projectCard);
