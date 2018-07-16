@@ -1,4 +1,7 @@
-import * as include from "../js/htmlInjection.js";
+import * as include from "./htmlInjection.js";
+import * as models from "./models.js"
+var backend = "https://safe-crag-70832.herokuapp.com";
+var localBackend = "http://192.168.0.45:8088";
 
 export function loadAllComponents(components){
     let allPromises = [];
@@ -41,8 +44,21 @@ export function parseJsonToClassInstance(classType, json){
 }
 
 export function createItem(item, insertItem){
-    saveItem(item); //save to local storage
-    insertItem(item)//create & insert new card
+    fetch(`${localBackend}/users/${item.author.id}/projects`,{
+        method: "POST",
+        headers: {"Content-Type": "application/json; charset=utf-8"},
+        body: JSON.stringify(item)
+    })
+    .then((resp) => { 
+        console.log('resp :', resp);
+        return resp.json()
+    })
+    .then((data) => {
+        let newProject = new models.Project(data.id, item.title, item.description, item.author.id);
+        insertItem(newProject);
+    }).catch((err) => {
+        console.log('err :', err);
+    })
 }
 
 export function removeItem(event, hasNestedResources) {
