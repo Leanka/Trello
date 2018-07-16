@@ -1,6 +1,10 @@
 import * as include from "../js/htmlInjection.js";
 import * as models from "../js/models.js";
 import * as tools from "../js/commonTools.js";
+var backend = "https://safe-crag-70832.herokuapp.com";
+var backendUserId = "5b4c702aee258500141cd48c";
+var localBackend = "http://192.168.0.45:8088";
+var localUserId = "5b4b4e5c7bcc4f69875e1c51"
 
 
 window.onload = function(){
@@ -14,11 +18,25 @@ window.onload = function(){
 }
 
 function loadAllProjects(){
-    for(let key in localStorage){
-        if(key.includes("project")){
-            insertItem(tools.parseJsonToClassInstance(models.Project, localStorage.getItem(key)));
+    fetch(`${localBackend}/users/${localUserId}/projects`)
+    .then((resp) => {
+        return resp.json()
+    })
+    .then((json) => {
+        for(let project of json){
+            let current = new models.Project(
+                project._id,
+                project.title,
+                project.description,
+                project.author.id
+            )
+            insertItem(current);
+            console.log('item :', current);
         }
-    }
+    })
+    .catch((err) => {
+        console.log('err :', err);
+    })
 }
 
 function getFormData(){
@@ -29,8 +47,8 @@ function getFormData(){
         document.getElementById("title").value = ""; //clear fields after getting user input
         document.getElementById("description").value = "";
         document.getElementById("myModal").style.display = "none"; //hide form
-        tools.createItem(new models.Project(`project-${tools.getCounter()}`, title, description), (item)=>{insertItem(item)});
         document.getElementById("new-project-button").focus()
+        tools.createItem(new models.Project(`project-${tools.getCounter()}`, title, description), (item)=>{insertItem(item)});
     } else {
         alert("Please enter both project title and description!");
     }
