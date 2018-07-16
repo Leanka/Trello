@@ -70,7 +70,6 @@ export function createItem(item, insertItem){
         body: JSON.stringify(item)
     })
     .then((resp) => { 
-        console.log('resp :', resp);
         return resp.json()
     })
     .then((data) => {
