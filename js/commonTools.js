@@ -87,8 +87,15 @@ function removeNestedResources(itemKey) {
 
 export function silentRemove(event){
     let identifier = event.target.getAttribute("identifier");
-    localStorage.removeItem(identifier);
-    document.getElementById(identifier).remove()
+    fetch(`${localBackend}/projects/${identifier}`,{
+        method: "DELETE"
+    })
+    .then(() => {
+        document.getElementById(identifier).remove();
+    })
+    .catch((err) => {
+        console.log('err :', err);
+    })
 }
 
 export function saveItem(item){
