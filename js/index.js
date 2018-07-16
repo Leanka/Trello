@@ -10,7 +10,8 @@ var localUserId = "5b4b4e5c7bcc4f69875e1c51"
 window.onload = function(){
     tools.loadAllComponents(document.querySelectorAll("[data-filepath]"));
     tools.loadAllProjects(localUserId, (item) => {insertItem(item)});
-    
+
+
     document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
     document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
     document.getElementById("myModal").addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {getFormData()})})
@@ -51,7 +52,7 @@ function insertItem(item){
 
         let myTarget = projectCard.getElementsByTagName("a")[0]
         let loc = myTarget.getAttribute("href")
-        myTarget.setAttribute("href", loc + '?key=' + newProjectId);
+        myTarget.setAttribute("href", loc + '?project=' + newProjectId);
         
         addDropdownToggleListeners(projectCard);
         addDropdownMenuActionListeners(projectCard);
