@@ -61,14 +61,9 @@ export function createItem(item, insertItem){
     })
 }
 
-export function removeItem(event, hasNestedResources) {
-    let identifier = event.target.getAttribute("identifier")
-    
+export function removeItem(event) {    
     if(confirm('Remove?')) {
       silentRemove(event);
-      if(hasNestedResources){
-        removeNestedResources(identifier)
-        }
     }
 }
 
