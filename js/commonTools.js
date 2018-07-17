@@ -122,6 +122,22 @@ export function createItem(item, insertItem){
     })
 }
 
+export function createList(item, insertItem){
+    fetch(`${localBackend}/projects/${item.parentProject.id}/lists`,{
+        method: "POST",
+        headers: {"Content-Type": "application/json; charset=utf-8"},
+        body: JSON.stringify(item)
+    })
+    .then((resp) => { 
+        return resp.json()
+    })
+    .then((data) => {
+        let newProject = new models.List(data.id, item.title, item.parentProject.id);
+        insertItem(newProject);
+    }).catch((err) => {
+        console.log('err :', err);
+    })
+}
 
 export function removeItem(event) {    
     if(confirm('Remove?')) {
