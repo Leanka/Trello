@@ -138,6 +138,24 @@ export function createList(item, insertItem){
     })
 }
 
+export function createTask(item, insertItem){
+    fetch(`${localBackend}/lists/${item.parentList.id}/tasks`,{
+        method: "POST",
+        headers: {"Content-Type": "application/json; charset=utf-8"},
+        body: JSON.stringify(item)
+    })
+    .then((resp) => { 
+        return resp.json()
+    })
+    .then((data) => {
+        let newProject = new models.Task(data.id, item.title, item.parentList.id);
+        console.log('newProject :', newProject);
+        insertItem(newProject);
+    }).catch((err) => {
+        console.log('err :', err);
+    })
+}
+
 export function removeItem(event) {    
     if(confirm('Remove?')) {
       silentRemove(event);
