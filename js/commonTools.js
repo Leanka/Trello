@@ -135,6 +135,24 @@ export function createTask(item, insertItem){
     })
 }
 
+
+function insertNewResource(item, id, resourceType, insertResource){
+    switch (resourceType) {
+        case "tasks":
+            insertResource(new models.Task(id, item.title, item.parentList.id));
+            break;
+        case "lists":
+            insertResource(new models.List(id, item.title, item.parentProject.id));
+            break;
+        case "projects":
+            insertResource(new models.Project(id, item.title, item.description, item.author.id));
+            break;
+    
+        default:
+            break;
+    }
+}
+
 export function removeItem(event, removeResource) {
     if(confirm('Remove?')) {
         removeResource(event);
