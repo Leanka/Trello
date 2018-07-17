@@ -55,6 +55,26 @@ export function loadAllLists(projectId, insertList, insertTasks){
     })
 }
 
+function loadAllTasks(listId, insertItem){
+    fetch(`${localBackend}/lists/${listId}/tasks`)
+    .then((resp) => {
+        return resp.json()
+    })
+    .then((json) => {
+        for(let task of json){
+            let current = new models.Task(
+                task._id,
+                task.title,
+                task.parentProject.id
+            )
+            insertItem(current);
+        }
+    })
+    .catch((err) => {
+        console.log('err :', err);
+    })
+}
+
 export function getCounter(){
     if(localStorage.counter){
         localStorage.counter = Number(localStorage.counter) + 1
