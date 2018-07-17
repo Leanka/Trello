@@ -156,14 +156,11 @@ export function createTask(item, insertItem){
     })
 }
 
-export function removeItem(event, confirmation, removeResource) {
-    if(confirmation){
-        if(confirm('Remove?')) {
-            removeResource(event);
-          }
-    }else{
-        removeResource(event)
+export function removeItem(event, removeResource) {
+    if(confirm('Remove?')) {
+        removeResource(event);
     }
+
 }
 
 export function silentRemove(event){
