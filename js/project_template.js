@@ -96,20 +96,21 @@ function insertItem(item){
                 resolve(list);
             })
             .catch(err => console.error(err));
+        
         })
     
 }
 
 function insertTask(task){
     var newItemId = task._key;
-
     let customContainer = document.createElement("li");
     customContainer.setAttribute("class", "task");
     customContainer.setAttribute("draggable", "true");
     customContainer.setAttribute("ondragstart", "drag(event)");
     customContainer.setAttribute("id", newItemId)
 
-    let destinationContainer = document.querySelectorAll(`#${task._parentKey} ul`)[0];
+
+    let destinationContainer = document.getElementById(task._parentKey).getElementsByTagName("ul")[0];
     include.singleHtmlElementInsert("../html/task-template.html", customContainer, destinationContainer).then((taskContainer) => {
         taskContainer.getElementsByClassName("task-title")[0].innerText = task._title;
         setTrashSettings(taskContainer, newItemId, false)
@@ -130,9 +131,11 @@ function setTrashSettings(container, itemId, confirmation){
 function addNewTaskToList(ev) {
   var taskTitle = ev.target.value;
   var listId = ev.target.getAttribute("identifier");
+
   ev.target.value = '';
     if(taskTitle.length > 0) {
-    tools.createItem(new models.Task(`task-${tools.getCounter()}`, taskTitle, listId), (task) => {insertTask(task)})
+        let item = {"title": taskTitle, "parentList":{"id":listId}};
+        tools.createTask(item, (task) => {insertTask(task)})
     } else {
         alert("Task name cannot be empty!");
     }
