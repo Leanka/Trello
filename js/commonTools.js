@@ -177,21 +177,20 @@ export function silentRemove(event){
 }
 
 export function removeTask(event){
-    let identifier = event.target.getAttribute("identifier");
-    fetch(`${localBackend}/tasks/${identifier}`,{
-        method: "DELETE"
-    })
-    .then(() => {
-        document.getElementById(identifier).remove();
-    })
-    .catch((err) => {
-        console.log('err :', err);
-    })
+    removeResource(event, "tasks");
 }
 
 export function removeList(event){
+    removeResource(event, "lists");
+}
+
+export function removeProject(event){
+    removeResource(event, "projects");
+}
+
+function removeResource(event, resourceType){
     let identifier = event.target.getAttribute("identifier");
-    fetch(`${localBackend}/lists/${identifier}`,{
+    fetch(`${localBackend}/${resourceType}/${identifier}`,{
         method: "DELETE"
     })
     .then(() => {
