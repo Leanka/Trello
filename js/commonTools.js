@@ -175,6 +175,19 @@ export function silentRemove(event){
     })
 }
 
+export function removeTask(event){
+    let identifier = event.target.getAttribute("identifier");
+    fetch(`${localBackend}/tasks/${identifier}`,{
+        method: "DELETE"
+    })
+    .then(() => {
+        document.getElementById(identifier).remove();
+    })
+    .catch((err) => {
+        console.log('err :', err);
+    })
+}
+
 export function saveItem(item){
     localStorage.setItem(item._key, JSON.stringify(item))
 }
