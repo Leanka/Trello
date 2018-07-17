@@ -84,42 +84,20 @@ export function parseQuery(queryString) {
     return query.key
 }
 
-export function createItem(item, insertItem){
-    fetch(`${localBackend}/users/${item.author.id}/projects`,{
-        method: "POST",
-        headers: {"Content-Type": "application/json; charset=utf-8"},
-        body: JSON.stringify(item)
-    })
-    .then((resp) => { 
-        return resp.json()
-    })
-    .then((data) => {
-        let newProject = new models.Project(data.id, item.title, item.description, item.author.id);
-        insertItem(newProject);
-    }).catch((err) => {
-        console.log('err :', err);
-    })
+export function createProject(item, insertItem){
+    createResource(item, insertItem, "users", "projects");
 }
 
 export function createList(item, insertItem){
-    fetch(`${localBackend}/projects/${item.parentProject.id}/lists`,{
-        method: "POST",
-        headers: {"Content-Type": "application/json; charset=utf-8"},
-        body: JSON.stringify(item)
-    })
-    .then((resp) => { 
-        return resp.json()
-    })
-    .then((data) => {
-        let newProject = new models.List(data.id, item.title, item.parentProject.id);
-        insertItem(newProject);
-    }).catch((err) => {
-        console.log('err :', err);
-    })
+    createResource(item, insertItem, "projects", "lists");
 }
 
 export function createTask(item, insertItem){
-    fetch(`${localBackend}/lists/${item.parentList.id}/tasks`,{
+    createResource(item, insertItem, "lists", "tasks");
+}
+
+function createResource(item, insertItem, parentType, childType){
+    fetch(`${localBackend}/${parentType}/${item.parentList.id}/${childType}`,{
         method: "POST",
         headers: {"Content-Type": "application/json; charset=utf-8"},
         body: JSON.stringify(item)
@@ -128,13 +106,11 @@ export function createTask(item, insertItem){
         return resp.json()
     })
     .then((data) => {
-        let newProject = new models.Task(data.id, item.title, item.parentList.id);
-        insertItem(newProject);
+        insertNewResource(item, data.id, childType, insertItem);
     }).catch((err) => {
         console.log('err :', err);
     })
 }
-
 
 function insertNewResource(item, id, resourceType, insertResource){
     switch (resourceType) {
