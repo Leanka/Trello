@@ -2,26 +2,27 @@
 import * as include from "../js/htmlInjection.js";
 import * as models from "../js/models.js";
 import * as tools from "../js/commonTools.js";
+var currentProjectId;
 
 window.onload = function(){
-    console.log(window.location.search);
-    // var projectKey = tools.parseQuery(window.location.search);
-    // if(projectKey){
-    //     localStorage.setItem("current", projectKey)
-    // }else{       
-    //     projectKey = localStorage.getItem("current")
-    // }
+    setCurrentProjectId();
 
-    // tools.loadAllComponents(document.querySelectorAll("[data-filepath]")).then(() => {
-    //     setCurrentProjectName()
-    // })
-    
+    tools.loadAllComponents(document.querySelectorAll("[data-filepath]")).then(() => {
+        // setCurrentProjectName()
+    })
+
+    tools.loadAllLists(currentProjectId, (list) => {insertItem(list)}, (task) => {insertTask(task)})
     // loadAllLists(projectKey)
 
-    // document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
-    // document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
-    // document.getElementById("myModal").addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {getFormData()})})
-    // document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
+    document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
+    document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
+    document.getElementById("myModal").addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {getFormData()})})
+    document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
+}
+
+function setCurrentProjectId(){ //wrap into promiss
+    let pathnameElements = window.location.pathname.split('/');
+    currentProjectId = pathnameElements[pathnameElements.length - 1];
 }
 
 function setCurrentProjectName(){
@@ -62,8 +63,9 @@ function getFormData(){
         document.getElementById("title").value = ""; //clear fields after getting user input
         document.getElementById("myModal").style.display = "none"; //hide form
 
-        let projectKey = localStorage.getItem("current");
-        tools.createItem(new models.List("list-"+tools.getCounter(),title, projectKey), (item)=>{insertItem(item)});
+        // let projectKey = localStorage.getItem("current");
+        let item = {"title": title, "parentProject":{"id":currentProjectId}}
+        tools.createList(item, (item)=>{insertItem(item)});
     } else {
         alert("List title cannot be empty!");
     }
