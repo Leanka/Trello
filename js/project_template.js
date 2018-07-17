@@ -92,7 +92,7 @@ function insertItem(item){
                 
                 list.getElementsByTagName("input")[0].setAttribute("identifier", newProjectId); //input
 
-                setTrashSettings(list, newProjectId, true);
+                setTrashSettings(list, newProjectId, (event) => {tools.removeList(event)},true);
                 resolve(list);
             })
             .catch(err => console.error(err));
@@ -113,18 +113,18 @@ function insertTask(task){
     let destinationContainer = document.getElementById(task._parentKey).getElementsByTagName("ul")[0];
     include.singleHtmlElementInsert("../html/task-template.html", customContainer, destinationContainer).then((taskContainer) => {
         taskContainer.getElementsByClassName("task-title")[0].innerText = task._title;
-        setTrashSettings(taskContainer, newItemId, false)
+        setTrashSettings(taskContainer, newItemId,(event) => {tools.removeTask(event)} ,false)
     })
 
 }
 
-function setTrashSettings(container, itemId, confirmation){
+function setTrashSettings(container, itemId, removeResource, confirmation){
     let trash = container.getElementsByClassName("del-item")[0];
     trash.setAttribute("identifier", itemId)
     if(confirmation){
-        trash.addEventListener("click", (event) => {tools.removeItem(event, confirmation)});
+        trash.addEventListener("click", (event) => {tools.removeItem(event, removeResource)});
     }else{
-        trash.addEventListener("click", (event) => {tools.silentRemove(event)});
+        trash.addEventListener("click", (event) => {removeResource(event)});
     }
 }
 
