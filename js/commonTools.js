@@ -45,9 +45,8 @@ export function loadAllLists(projectId, insertList, insertTasks){
                 list.title,
                 list.parentProject.id
             )
-            insertList(current).then(() => {
-                loadAllTasks(current._id, insertTasks)
-            })
+            insertList(current)
+            loadAllTasks(current._key, insertTasks)
         }
     })
     .catch((err) => {
@@ -65,7 +64,7 @@ function loadAllTasks(listId, insertItem){
             let current = new models.Task(
                 task._id,
                 task.title,
-                task.parentProject.id
+                task.parentList.id
             )
             insertItem(current);
         }
