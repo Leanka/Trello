@@ -74,15 +74,6 @@ function loadAllTasks(listId, insertItem){
     })
 }
 
-export function getCounter(){
-    if(localStorage.counter){
-        localStorage.counter = Number(localStorage.counter) + 1
-    }else{
-        localStorage.counter = 1
-    }
-    return localStorage.counter
-}
-
 export function parseQuery(queryString) {
     let query = {};
     let pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
@@ -91,17 +82,6 @@ export function parseQuery(queryString) {
         query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
     }
     return query.key
-}
-
-export function parseJsonToClassInstance(classType, json){
-    let jasonData = JSON.parse(json)
-    let values = [];
-    
-    for(let key in jasonData){
-        values.push(jasonData[key])
-    }
-
-    return new classType(...values)
 }
 
 export function createItem(item, insertItem){
@@ -149,7 +129,6 @@ export function createTask(item, insertItem){
     })
     .then((data) => {
         let newProject = new models.Task(data.id, item.title, item.parentList.id);
-        console.log('newProject :', newProject);
         insertItem(newProject);
     }).catch((err) => {
         console.log('err :', err);
@@ -160,20 +139,6 @@ export function removeItem(event, removeResource) {
     if(confirm('Remove?')) {
         removeResource(event);
     }
-
-}
-
-export function silentRemove(event){
-    let identifier = event.target.getAttribute("identifier");
-    fetch(`${localBackend}/projects/${identifier}`,{
-        method: "DELETE"
-    })
-    .then(() => {
-        document.getElementById(identifier).remove();
-    })
-    .catch((err) => {
-        console.log('err :', err);
-    })
 }
 
 export function removeTask(event){
@@ -199,10 +164,6 @@ function removeResource(event, resourceType){
     .catch((err) => {
         console.log('err :', err);
     })
-}
-
-export function saveItem(item){
-    localStorage.setItem(item._key, JSON.stringify(item))
 }
 
 export function onKeyPress(event, callback){
