@@ -33,6 +33,28 @@ export function loadAllProjects(localUserId, insertItem){
     })
 }
 
+export function loadAllLists(projectId, insertList, insertTasks){
+    fetch(`${localBackend}/projects/${projectId}/lists`)
+    .then((resp) => {
+        return resp.json()
+    })
+    .then((json) => {
+        for(let list of json){
+            let current = new models.List(
+                list._id,
+                list.title,
+                list.parentProject.id
+            )
+            insertList(current).then(() => {
+                loadAllTasks(current._id, insertTasks)
+            })
+        }
+    })
+    .catch((err) => {
+        console.log('err :', err);
+    })
+}
+
 export function getCounter(){
     if(localStorage.counter){
         localStorage.counter = Number(localStorage.counter) + 1
@@ -79,6 +101,7 @@ export function createItem(item, insertItem){
         console.log('err :', err);
     })
 }
+
 
 export function removeItem(event) {    
     if(confirm('Remove?')) {
