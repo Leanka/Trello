@@ -1,7 +1,7 @@
 import * as include from "./htmlInjection.js";
 import * as models from "./models.js"
 var backend = "https://safe-crag-70832.herokuapp.com";
-var localBackend = "http://192.168.0.45:8088";
+var localBackend = "http://192.168.11.134:8088";
 
 export function loadAllComponents(components){
     let allPromises = [];

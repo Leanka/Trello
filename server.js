@@ -10,7 +10,7 @@ var HTTP_PORT = 8890;
 
 http.createServer(app).listen(HTTP_PORT, (err) => {})
 
-app.get('/landing', function(req, res) {
+app.get('/', function(req, res) {
     res.sendFile("./html/landing-page.html", {root: __dirname })
 });
 
@@ -21,5 +21,3 @@ app.get('/home/:id', function(req, res) {
 app.get('/project/:id', function(req, res) {
     res.sendFile("./html/project_template.html", {root: __dirname })
 });
-
-
