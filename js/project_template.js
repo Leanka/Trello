@@ -64,7 +64,7 @@ function getFormData(){
         document.getElementById("myModal").style.display = "none"; //hide form
 
         // let projectKey = localStorage.getItem("current");
-        let item = {"title": title, "parentProject":{"id":currentProjectId}}
+        let item = {"title": title, "parentKey":{"id":currentProjectId}}
         tools.createList(item, (item)=>{insertItem(item)});
     } else {
         alert("List title cannot be empty!");
@@ -134,7 +134,7 @@ function addNewTaskToList(ev) {
 
   ev.target.value = '';
     if(taskTitle.length > 0) {
-        let item = {"title": taskTitle, "parentList":{"id":listId}};
+        let item = {"title": taskTitle, "parentKey":{"id":listId}};
         tools.createTask(item, (task) => {insertTask(task)})
     } else {
         alert("Task name cannot be empty!");
@@ -181,10 +181,10 @@ window.drop = function(ev) {
 
 }
 
-function updateTaskPosition(taskKey, listKey){
-    let task = tools.parseJsonToClassInstance(models.Task, localStorage.getItem(taskKey));
-    task._parentKey = listKey;
-    tools.saveItem(task);
-}
+// function updateTaskPosition(taskKey, listKey){
+//     let task = tools.parseJsonToClassInstance(models.Task, localStorage.getItem(taskKey));
+//     task._parentKey = listKey;
+//     tools.saveItem(task);
+// }
 
 addKeyListenersToInputs(); //do onloada

@@ -36,8 +36,8 @@ function getFormData(){
         document.getElementById("myModal").style.display = "none"; //hide form
         document.getElementById("new-project-button").focus()
 
-        let item = {"title": title, "description":description, "author":{"id":localUserId}}
-        tools.createItem(item, (item)=>{insertItem(item)});
+        let item = {"title": title, "description":description, "parentKey":{"id":localUserId}}
+        tools.createProject(item, (item)=>{insertItem(item)});
     } else {
         alert("Please enter both project title and description!");
     }

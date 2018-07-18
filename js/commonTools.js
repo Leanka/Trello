@@ -23,7 +23,7 @@ export function loadAllProjects(localUserId, insertItem){
                 project._id,
                 project.title,
                 project.description,
-                project.author.id
+                project.parentKey.id
             )
             insertItem(current);
         }
@@ -43,7 +43,7 @@ export function loadAllLists(projectId, insertList, insertTasks){
             let current = new models.List(
                 list._id,
                 list.title,
-                list.parentProject.id
+                list.parentKey.id
             )
             insertList(current)
             loadAllTasks(current._key, insertTasks)
@@ -64,7 +64,7 @@ function loadAllTasks(listId, insertItem){
             let current = new models.Task(
                 task._id,
                 task.title,
-                task.parentList.id
+                task.parentKey.id
             )
             insertItem(current);
         }
@@ -97,7 +97,7 @@ export function createTask(item, insertItem){
 }
 
 function createResource(item, insertItem, parentType, childType){
-    fetch(`${localBackend}/${parentType}/${item.parentList.id}/${childType}`,{
+    fetch(`${localBackend}/${parentType}/${item.parentKey.id}/${childType}`,{
         method: "POST",
         headers: {"Content-Type": "application/json; charset=utf-8"},
         body: JSON.stringify(item)
@@ -115,13 +115,13 @@ function createResource(item, insertItem, parentType, childType){
 function insertNewResource(item, id, resourceType, insertResource){
     switch (resourceType) {
         case "tasks":
-            insertResource(new models.Task(id, item.title, item.parentList.id));
+            insertResource(new models.Task(id, item.title, item.parentKey.id));
             break;
         case "lists":
-            insertResource(new models.List(id, item.title, item.parentProject.id));
+            insertResource(new models.List(id, item.title, item.parentKey.id));
             break;
         case "projects":
-            insertResource(new models.Project(id, item.title, item.description, item.author.id));
+            insertResource(new models.Project(id, item.title, item.description, item.parentKey.id));
             break;
     
         default:
