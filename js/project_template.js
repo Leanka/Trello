@@ -186,16 +186,12 @@ function handleTaskDrop(ev, id){
         tools.updateResource(data, "tasks", {"position": destinationNode.childElementCount-1}) //len of list -1, couse it's already there
     }
     tools.updateResource(data, "tasks", {"parentKey": {"id": id}});
-    //update position of all elems in list
-    //update parent of single elem
 }
 
 function updateTasksOrderInList(tasksList){
-    console.log("in update, tasklist len: ", tasksList.length);
     let index = 0;
     for(let task of tasksList){
         let taskId = task.getAttribute("id");
-        console.log('taskId :', taskId);
         tools.updateResource(taskId, "tasks", {"position":index})
         ++index
     }
