@@ -9,7 +9,7 @@ window.onload = function(){
 
     tools.loadAllComponents(document.querySelectorAll("[data-filepath]")).then(() => {
         // setCurrentProjectName()
-    })
+    }).catch((err) => {console.log('err :', err);})
 
     tools.loadAllLists(currentProjectId, (list) => {insertItem(list)}, (task) => {insertTask(task)})
     // loadAllLists(projectKey)
@@ -115,7 +115,10 @@ function insertTask(task){
     let destinationContainer = document.getElementById(task._parentKey).getElementsByTagName("ul")[0];
     include.singleHtmlElementInsert("../html/task-template.html", customContainer, destinationContainer).then((taskContainer) => {
         taskContainer.getElementsByClassName("task-title")[0].innerText = task._title;
-        setTrashSettings(taskContainer, newItemId,(event) => {tools.removeTask(event)} ,false)
+        setTrashSettings(taskContainer, newItemId,(event) => {
+            tools.removeTask(event, () => {updateTasksOrderInList(destinationContainer.childNodes)})
+        } ,false)
+        tools.updateResource(newItemId, "tasks", {"position": destinationContainer.childElementCount-1})
     })
 
 }
@@ -162,6 +165,7 @@ window.allowDrop = function(ev) {
 
 window.drag = function(ev) {
     ev.dataTransfer.setData("text/html", ev.target.id);
+    updateTasksOrderInList(ev.target.parentNode.childNodes)
 }
 
 function handleTaskDrop(ev, id){
@@ -169,13 +173,28 @@ function handleTaskDrop(ev, id){
     let data = ev.dataTransfer.getData("text/html");
     ev.dataTransfer.dropEffect = "move";
 
+    console.log("in handleTaskDrop");
     let destinationNode = document.getElementById(id).getElementsByTagName("ul")[0]
     if(ev.target.tagName == "P"){
         destinationNode.insertBefore(document.getElementById(data), ev.target.parentNode)
-        //update position and parent
+        updateTasksOrderInList(destinationNode.childNodes)  //rearrange tasks order in db
     }else{
         destinationNode.appendChild(document.getElementById(data));
-         //update position and parent
+        tools.updateResource(data, "tasks", {"position": destinationNode.childElementCount-1}) //len of list -1, couse it's already there
+    }
+    tools.updateResource(data, "tasks", {"parentKey": {"id": id}});
+    //update position of all elems in list
+    //update parent of single elem
+}
+
+function updateTasksOrderInList(tasksList){
+    console.log("in update, tasklist len: ", tasksList.length);
+    let index = 0;
+    for(let task of tasksList){
+        let taskId = task.getAttribute("id");
+        console.log('taskId :', taskId);
+        tools.updateResource(taskId, "tasks", {"position":index})
+        ++index
     }
 }
 
