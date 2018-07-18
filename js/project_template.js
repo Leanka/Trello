@@ -173,10 +173,13 @@ function handleTaskDrop(ev, id){
     let data = ev.dataTransfer.getData("text/html");
     ev.dataTransfer.dropEffect = "move";
 
-    console.log("in handleTaskDrop");
     let destinationNode = document.getElementById(id).getElementsByTagName("ul")[0]
-    if(ev.target.tagName == "P"){
+    let elementName = ev.target.tagName;
+    if(elementName == "P"){
         destinationNode.insertBefore(document.getElementById(data), ev.target.parentNode)
+        updateTasksOrderInList(destinationNode.childNodes)  //rearrange tasks order in db
+    }else if(elementName == "LI"){
+        destinationNode.insertBefore(document.getElementById(data), ev.target)
         updateTasksOrderInList(destinationNode.childNodes)  //rearrange tasks order in db
     }else{
         destinationNode.appendChild(document.getElementById(data));
