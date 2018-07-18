@@ -55,7 +55,6 @@ function loadAllTasks(listKey){
     }
 }
 
-
 function getFormData(){
     let title = document.getElementById("title").value.trim();
     
@@ -76,9 +75,12 @@ function insertItem(item){
             //code for inserting project
             let newProjectId = item._key;
             let customContainer = document.createElement("div");
+            
             customContainer.setAttribute("id", newProjectId)
+            customContainer.addEventListener("drop", function(ev){handleTaskDrop(ev, this.id)})
+            
             customContainer.setAttribute("class", "col-3");
-            customContainer.setAttribute("ondrop", "drop(event)");
+            // customContainer.setAttribute("ondrop", "drop(event)");
             customContainer.setAttribute("ondragover", "allowDrop(event)");
     
             
@@ -162,29 +164,19 @@ window.drag = function(ev) {
     ev.dataTransfer.setData("text/html", ev.target.id);
 }
 
-window.drop = function(ev) {
+function handleTaskDrop(ev, id){
     ev.preventDefault();
     let data = ev.dataTransfer.getData("text/html");
-    let ulIndex = 4;
     ev.dataTransfer.dropEffect = "move";
 
-    let destinationNode;
-    if(ev.target.id.startsWith("list")) {
-        destinationNode = ev.target.childNodes[ulIndex];
-         destinationNode.appendChild(document.getElementById(data));
-    } else if(ev.target.id.includes("task")) {
-        destinationNode = ev.target.parentNode;
-         destinationNode.appendChild(document.getElementById(data)); 
+    let destinationNode = document.getElementById(id).getElementsByTagName("ul")[0]
+    if(ev.target.tagName == "P"){
+        destinationNode.insertBefore(document.getElementById(data), ev.target.parentNode)
+        //update position and parent
+    }else{
+        destinationNode.appendChild(document.getElementById(data));
+         //update position and parent
     }
-     let destinationListId = destinationNode.getAttribute("identifier");
-     updateTaskPosition(data, destinationListId);
-
 }
-
-// function updateTaskPosition(taskKey, listKey){
-//     let task = tools.parseJsonToClassInstance(models.Task, localStorage.getItem(taskKey));
-//     task._parentKey = listKey;
-//     tools.saveItem(task);
-// }
 
 addKeyListenersToInputs(); //do onloada
