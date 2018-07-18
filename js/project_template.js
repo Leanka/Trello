@@ -8,7 +8,7 @@ window.onload = function(){
     setCurrentProjectId();
 
     tools.loadAllComponents(document.querySelectorAll("[data-filepath]")).then(() => {
-        // setCurrentProjectName()
+        setCurrentProjectName()
     }).catch((err) => {console.log('err :', err);})
 
     tools.loadAllLists(currentProjectId, (list) => {insertItem(list)}, (task) => {insertTask(task)})
@@ -26,9 +26,9 @@ function setCurrentProjectId(){ //wrap into promiss
 }
 
 function setCurrentProjectName(){
-    let current = localStorage.getItem("current")
-    let project = tools.parseJsonToClassInstance(models.Project, localStorage.getItem(current));
-    document.getElementById("current-project-title").innerText = project._title;
+    tools.loadProject(currentProjectId, (title) => {
+        document.getElementById("current-project-title").innerText = title;
+    })
 }
 
 function loadAllLists(projectKey){
