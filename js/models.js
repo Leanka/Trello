@@ -13,13 +13,13 @@ export class List{
         this._title = title;
         this._parentKey = parentKey;
     }
-
 }
 
 export class Task{
-    constructor(key, title, parentKey) {
+    constructor(key, title, status, parentKey) {
         this._key = key; // change to get ready key
         this._title = title;
+        this._status = status;
         this._parentKey = parentKey;
     }
 }
