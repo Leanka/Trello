@@ -12,6 +12,19 @@ export function loadAllComponents(components){
     return Promise.all(allPromises);
 }
 
+export function loadProjectTitle(projectId, insertItem){
+    fetch(`${localBackend}/projects/${projectId}`)
+    .then((resp) => {
+        return resp.json()
+    })
+    .then((project) => {
+        insertItem(project.title);
+    })
+    .catch((err) => {
+        console.log('err :', err);
+    })
+}
+
 export function loadAllProjects(localUserId, insertItem){
     fetch(`${localBackend}/users/${localUserId}/projects`)
     .then((resp) => {
