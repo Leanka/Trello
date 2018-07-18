@@ -64,6 +64,7 @@ function loadAllTasks(listId, insertItem){
             let current = new models.Task(
                 task._id,
                 task.title,
+                task.status,
                 task.parentKey.id
             )
             insertItem(current);
@@ -115,7 +116,7 @@ function createResource(item, insertItem, parentType, childType){
 function insertNewResource(item, id, resourceType, insertResource){
     switch (resourceType) {
         case "tasks":
-            insertResource(new models.Task(id, item.title, item.parentKey.id));
+            insertResource(new models.Task(id, item.title, item.status, item.parentKey.id));
             break;
         case "lists":
             insertResource(new models.List(id, item.title, item.parentKey.id));
@@ -129,14 +130,25 @@ function insertNewResource(item, id, resourceType, insertResource){
     }
 }
 
+export function updateResource(id, resourceType, dataToUpdate){
+    fetch(`${localBackend}/${resourceType}/${id}`,{
+        method: "PATCH",
+        headers: {"Content-Type": "application/json; charset=utf-8"},
+        body: JSON.stringify(dataToUpdate)
+    })
+    .catch((err) => {
+        console.log('err :', err);
+    })
+}
+
 export function removeItem(event, removeResource) {
     if(confirm('Remove?')) {
         removeResource(event);
     }
 }
 
-export function removeTask(event){
-    removeResource(event, "tasks");
+export function removeTask(event, updateTergetListOrder){
+    removeResource(event, "tasks", updateTergetListOrder);
 }
 
 export function removeList(event){
@@ -147,13 +159,16 @@ export function removeProject(event){
     removeResource(event, "projects");
 }
 
-function removeResource(event, resourceType){
+function removeResource(event, resourceType, next){
     let identifier = event.target.getAttribute("identifier");
     fetch(`${localBackend}/${resourceType}/${identifier}`,{
         method: "DELETE"
     })
     .then(() => {
         document.getElementById(identifier).remove();
+        if(next){
+            next()
+        }
     })
     .catch((err) => {
         console.log('err :', err);
