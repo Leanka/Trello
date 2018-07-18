@@ -31,30 +31,6 @@ function setCurrentProjectName(){
     })
 }
 
-function loadAllLists(projectKey){
-    for(let key in localStorage){
-        if(key.includes("list")){ //check if item is a list
-            let list = tools.parseJsonToClassInstance(models.List, localStorage.getItem(key));
-            if(list._parentKey == projectKey){ //check if list if from current project
-                insertItem(list).then((list) => {
-                    loadAllTasks(key);
-                })
-            }
-        }
-    }
-}
-
-function loadAllTasks(listKey){
-    for(let key in localStorage){
-        if(key.includes("task-")){
-            let task = tools.parseJsonToClassInstance(models.Task, localStorage.getItem(key));
-            if(task._parentKey == listKey){
-                insertTask(task);
-            }
-        }
-    }
-}
-
 function getFormData(){
     let title = document.getElementById("title").value.trim();
     
