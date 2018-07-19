@@ -26,7 +26,7 @@ function setCurrentProjectId(){ //wrap into promiss
 }
 
 function setCurrentProjectName(){
-    tools.loadProject(currentProjectId, (title) => {
+    tools.loadProjectTitle(currentProjectId, (title) => {
         document.getElementById("current-project-title").innerText = title;
     })
 }
