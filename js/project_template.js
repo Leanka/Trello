@@ -48,7 +48,7 @@ function getFormData(){
 
 function insertItem(item){
     return new Promise((resolve, reject) => {
-            //code for inserting project
+            // code for inserting project
             let newProjectId = item._key;
             let customContainer = document.createElement("div");
             
@@ -61,7 +61,7 @@ function insertItem(item){
     
             include.singleHtmlElementInsert("../html/list-template.html", customContainer, document.getElementById("main-project-container"))
             .then((list) =>{
-                // //fill project card with data
+                // fill project card with data
                 list.querySelectorAll("span.title-field")[0].innerText = item._title; //setting title
                 list.getElementsByClassName("todo-list")[0].setAttribute("identifier", newProjectId)
                                                                 
@@ -96,7 +96,7 @@ function insertTask(task){
         let taskNode = taskContainer.getElementsByClassName("task-title")[0];
         taskNode.innerText = task._title;
         if(task._status == "done"){
-            taskNode.setAttribute("class", "cross-over");
+            taskNode.classList.add("cross-over");
         }
 
         setTrashSettings(taskContainer, newItemId,(event) => {
@@ -109,20 +109,18 @@ function insertTask(task){
 }
 
 function strikeTask(taskId){
-    console.log('taskId :', taskId);
     let taskContainer = document.getElementById(taskId)
-    console.log('object :', taskContainer);
     let task = taskContainer.getElementsByClassName("task-title")[0];
 
-
+    let newStatus;
     if(task.classList.contains("cross-over")){
         task.classList.remove("cross-over");
+        newStatus = {"status":"todo"};
     }else{
         task.classList.add("cross-over");
+        newStatus = {"status":"done"};
     }
-
-    //update task
-    
+    tools.updateResource(taskId, "tasks", newStatus)
 }
 
 function setTrashSettings(container, itemId, removeResource, confirmation){
