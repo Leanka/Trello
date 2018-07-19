@@ -11,7 +11,7 @@ window.onload = function(){
         setCurrentProjectName()
     }).catch((err) => {console.log('err :', err);})
 
-    tools.loadAllLists(currentProjectId, (list) => {insertItem(list)}, (task) => {insertTask(task)})
+    tools.loadAllLists(currentProjectId, (list) => insertItem(list), (task) => insertTask(task));
     // loadAllLists(projectKey)
 
     document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
@@ -59,8 +59,8 @@ function insertItem(item){
             // customContainer.setAttribute("ondrop", "drop(event)");
             customContainer.setAttribute("ondragover", "allowDrop(event)");
     
-            
-            include.singleHtmlElementInsert("../html/list-template.html", customContainer, document.getElementById("main-project-container")).then((list) =>{
+            include.singleHtmlElementInsert("../html/list-template.html", customContainer, document.getElementById("main-project-container"))
+            .then((list) =>{
                 // //fill project card with data
                 list.querySelectorAll("span.title-field")[0].innerText = item._title; //setting title
                 list.getElementsByClassName("todo-list")[0].setAttribute("identifier", newProjectId)
@@ -74,7 +74,6 @@ function insertItem(item){
                 resolve(list);
             })
             .catch(err => console.error(err));
-        
         })
     
 }
@@ -87,16 +86,43 @@ function insertTask(task){
     customContainer.setAttribute("ondragstart", "drag(event)");
     customContainer.setAttribute("id", newItemId)
 
+    customContainer.addEventListener("dblclick", () => {strikeTask(newItemId)})
+    
+
 
     let destinationContainer = document.getElementById(task._parentKey).getElementsByTagName("ul")[0];
-    include.singleHtmlElementInsert("../html/task-template.html", customContainer, destinationContainer).then((taskContainer) => {
-        taskContainer.getElementsByClassName("task-title")[0].innerText = task._title;
+    include.singleHtmlElementInsert("../html/task-template.html", customContainer, destinationContainer)
+    .then((taskContainer) => {
+        let taskNode = taskContainer.getElementsByClassName("task-title")[0];
+        taskNode.innerText = task._title;
+        if(task._status == "done"){
+            taskNode.setAttribute("class", "cross-over");
+        }
+
         setTrashSettings(taskContainer, newItemId,(event) => {
             tools.removeTask(event, () => {updateTasksOrderInList(destinationContainer.childNodes)})
         } ,false)
+
         tools.updateResource(newItemId, "tasks", {"position": destinationContainer.childElementCount-1})
     })
 
+}
+
+function strikeTask(taskId){
+    console.log('taskId :', taskId);
+    let taskContainer = document.getElementById(taskId)
+    console.log('object :', taskContainer);
+    let task = taskContainer.getElementsByClassName("task-title")[0];
+
+
+    if(task.classList.contains("cross-over")){
+        task.classList.remove("cross-over");
+    }else{
+        task.classList.add("cross-over");
+    }
+
+    //update task
+    
 }
 
 function setTrashSettings(container, itemId, removeResource, confirmation){
