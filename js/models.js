@@ -9,7 +9,7 @@ export class Project {
 
 export class List{
     constructor(key, title, parentKey) {
-        this._key = key; //change to get ready key
+        this._key = key;
         this._title = title;
         this._parentKey = parentKey;
     }
@@ -17,7 +17,7 @@ export class List{
 
 export class Task{
     constructor(key, title, status, parentKey) {
-        this._key = key; // change to get ready key
+        this._key = key;
         this._title = title;
         this._status = status;
         this._parentKey = parentKey;

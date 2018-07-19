@@ -1,8 +1,6 @@
 import * as include from "./htmlInjection.js";
 import * as models from "./models.js"
 var backend = "https://safe-crag-70832.herokuapp.com";
-// var localBackend = "http://192.168.11.134:8088"; codecool
-var localBackend = "http://192.168.0.45:8088";
 
 export function loadAllComponents(components){
     let allPromises = [];
@@ -14,7 +12,7 @@ export function loadAllComponents(components){
 }
 
 export function loadProjectTitle(projectId, insertItem){
-    fetch(`${localBackend}/projects/${projectId}`)
+    fetch(`${backend}/projects/${projectId}`)
     .then((resp) => {
         return resp.json()
     })
@@ -27,7 +25,7 @@ export function loadProjectTitle(projectId, insertItem){
 }
 
 export function loadAllProjects(localUserId, insertItem){
-    fetch(`${localBackend}/users/${localUserId}/projects`)
+    fetch(`${backend}/users/${localUserId}/projects`)
     .then((resp) => {
         return resp.json()
     })
@@ -48,7 +46,7 @@ export function loadAllProjects(localUserId, insertItem){
 }
 
 export function loadAllLists(projectId, insertList, insertTasks){
-    fetch(`${localBackend}/projects/${projectId}/lists`)
+    fetch(`${backend}/projects/${projectId}/lists`)
     .then((resp) => {
         return resp.json()
     })
@@ -68,7 +66,7 @@ export function loadAllLists(projectId, insertList, insertTasks){
 }
 
 function loadAllTasks(listId, insertItem){
-    fetch(`${localBackend}/lists/${listId}/tasks`)
+    fetch(`${backend}/lists/${listId}/tasks`)
     .then((resp) => {
         return resp.json()
     })
@@ -111,7 +109,7 @@ export function createTask(item, insertItem){
 }
 
 function createResource(item, insertItem, parentType, childType){
-    fetch(`${localBackend}/${parentType}/${item.parentKey.id}/${childType}`,{
+    fetch(`${backend}/${parentType}/${item.parentKey.id}/${childType}`,{
         method: "POST",
         headers: {"Content-Type": "application/json; charset=utf-8"},
         body: JSON.stringify(item)
@@ -144,7 +142,7 @@ function insertNewResource(item, id, resourceType, insertResource){
 }
 
 export function updateResource(id, resourceType, dataToUpdate){
-    fetch(`${localBackend}/${resourceType}/${id}`,{
+    fetch(`${backend}/${resourceType}/${id}`,{
         method: "PATCH",
         headers: {"Content-Type": "application/json; charset=utf-8"},
         body: JSON.stringify(dataToUpdate)
@@ -174,7 +172,7 @@ export function removeProject(event){
 
 function removeResource(event, resourceType, next){
     let identifier = event.target.getAttribute("identifier");
-    fetch(`${localBackend}/${resourceType}/${identifier}`,{
+    fetch(`${backend}/${resourceType}/${identifier}`,{
         method: "DELETE"
     })
     .then(() => {

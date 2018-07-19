@@ -3,6 +3,7 @@ import * as include from "../js/htmlInjection.js";
 import * as models from "../js/models.js";
 import * as tools from "../js/commonTools.js";
 var currentProjectId;
+var listTemplatePath = "../html/list-template.html";
 
 window.onload = function(){
     setCurrentProjectId();
@@ -18,6 +19,7 @@ window.onload = function(){
     document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
     document.getElementById("myModal").addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {getFormData()})})
     document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
+    addKeyListenersToInputs();
 }
 
 function setCurrentProjectId(){ //wrap into promiss
@@ -38,7 +40,6 @@ function getFormData(){
         document.getElementById("title").value = ""; //clear fields after getting user input
         document.getElementById("myModal").style.display = "none"; //hide form
 
-        // let projectKey = localStorage.getItem("current");
         let item = {"title": title, "parentKey":{"id":currentProjectId}}
         tools.createList(item, (item)=>{insertItem(item)});
     } else {
@@ -56,21 +57,19 @@ function insertItem(item){
             customContainer.addEventListener("drop", function(ev){handleTaskDrop(ev, this.id)})
             
             customContainer.setAttribute("class", "col-3");
-            // customContainer.setAttribute("ondrop", "drop(event)");
             customContainer.setAttribute("ondragover", "allowDrop(event)");
     
-            include.singleHtmlElementInsert("../html/list-template.html", customContainer, document.getElementById("main-project-container"))
+            include.singleHtmlElementInsert(listTemplatePath, customContainer, document.getElementById("main-project-container"))
             .then((list) =>{
                 // fill project card with data
                 list.querySelectorAll("span.title-field")[0].innerText = item._title; //setting title
                 list.getElementsByClassName("todo-list")[0].setAttribute("identifier", newProjectId)
-                                                                
+                list.getElementsByTagName("input")[0].setAttribute("identifier", newProjectId); //input
+                setTrashSettings(list, newProjectId, (event) => {tools.removeList(event)},true);
+            
                 var inputField = list.getElementsByClassName("list-title")[0].nextElementSibling; //adding new event
                 inputField.addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {addNewTaskToList(event)})})
-                
-                list.getElementsByTagName("input")[0].setAttribute("identifier", newProjectId); //input
 
-                setTrashSettings(list, newProjectId, (event) => {tools.removeList(event)},true);
                 resolve(list);
             })
             .catch(err => console.error(err));
@@ -85,16 +84,15 @@ function insertTask(task){
     customContainer.setAttribute("draggable", "true");
     customContainer.setAttribute("ondragstart", "drag(event)");
     customContainer.setAttribute("id", newItemId)
-
     customContainer.addEventListener("dblclick", () => {strikeTask(newItemId)})
     
-
 
     let destinationContainer = document.getElementById(task._parentKey).getElementsByTagName("ul")[0];
     include.singleHtmlElementInsert("../html/task-template.html", customContainer, destinationContainer)
     .then((taskContainer) => {
         let taskNode = taskContainer.getElementsByClassName("task-title")[0];
         taskNode.innerText = task._title;
+
         if(task._status == "done"){
             taskNode.classList.add("cross-over");
         }
@@ -126,6 +124,7 @@ function strikeTask(taskId){
 function setTrashSettings(container, itemId, removeResource, confirmation){
     let trash = container.getElementsByClassName("del-item")[0];
     trash.setAttribute("identifier", itemId)
+
     if(confirmation){
         trash.addEventListener("click", (event) => {tools.removeItem(event, removeResource)});
     }else{
@@ -175,15 +174,16 @@ function handleTaskDrop(ev, id){
 
     let destinationNode = document.getElementById(id).getElementsByTagName("ul")[0]
     let elementName = ev.target.tagName;
+
     if(elementName == "P"){
         destinationNode.insertBefore(document.getElementById(data), ev.target.parentNode)
-        updateTasksOrderInList(destinationNode.childNodes)  //rearrange tasks order in db
+        updateTasksOrderInList(destinationNode.childNodes)
     }else if(elementName == "LI"){
         destinationNode.insertBefore(document.getElementById(data), ev.target)
-        updateTasksOrderInList(destinationNode.childNodes)  //rearrange tasks order in db
+        updateTasksOrderInList(destinationNode.childNodes)
     }else{
         destinationNode.appendChild(document.getElementById(data));
-        tools.updateResource(data, "tasks", {"position": destinationNode.childElementCount-1}) //len of list -1, couse it's already there
+        tools.updateResource(data, "tasks", {"position": destinationNode.childElementCount-1}) //len of list -1 - item is already there, position values start at 0, not 1
     }
     tools.updateResource(data, "tasks", {"parentKey": {"id": id}});
 }
@@ -196,5 +196,3 @@ function updateTasksOrderInList(tasksList){
         ++index
     }
 }
-
-addKeyListenersToInputs(); //do onloada

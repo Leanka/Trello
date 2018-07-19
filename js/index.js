@@ -1,10 +1,6 @@
 import * as include from "../js/htmlInjection.js";
 import * as models from "../js/models.js";
 import * as tools from "../js/commonTools.js";
-var backend = "https://safe-crag-70832.herokuapp.com";
-var backendUserId = "5b4c702aee258500141cd48c";
-var localBackend = "http://192.168.0.45:8088";
-// var localUserId = "5b4b4e5c7bcc4f69875e1c51"
 var localUserId;
 var projectPath = '../project/';
 var projectCardTemplatePath = "../html/project-card.html";
