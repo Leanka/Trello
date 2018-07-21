@@ -21,3 +21,6 @@ app.get('/home/:id', function(req, res) {
 app.get('/project/:id', function(req, res) {
     res.sendFile("./html/project_template.html", {root: __dirname })
 });
+
+//C9 listener
+app.listen(process.env.PORT, process.env.IP);
