@@ -1,3 +1,4 @@
+var staticHtmlDirPath = "../html/";
 
 export  function singleHtmlElementInsert(filepath, customContainer, destinationContainerId) {
   return new Promise((resolve, reject) => {
@@ -13,7 +14,7 @@ export  function singleHtmlElementInsert(filepath, customContainer, destinationC
             resolve(customContainer);
         }
       }
-      xhttp.open("GET", filepath, true);
+      xhttp.open("GET", staticHtmlDirPath + filepath, true);
       xhttp.send();
     })
       

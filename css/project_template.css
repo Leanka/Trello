@@ -151,3 +151,7 @@ h1 .fa-trash:hover {
 a.navbar-brand:hover {
 	opacity: .5;
 }
+
+.cross-over {
+	text-decoration: line-through;
+  }
