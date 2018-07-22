@@ -1,7 +1,9 @@
 import * as include from "./htmlInjection.js";
 import * as models from "./models.js"
-import * as db from "../db"
-import fetch from 'node-fetch'
+import * as dbUser from "../db/users.js"
+// import fetch from 'node-fetch'
+// var fetch = require("node-fetch");
+// import fetch from "isomorphic-fetch";
 var backend = "https://safe-crag-70832.herokuapp.com";
 
 export function loadAllComponents(components){
@@ -43,7 +45,7 @@ export function getAllUsers() {
         }
     })
     .then(() => {
-        db.users.setUsers(users);
+        dbUser.setUsers(users);
     })
     .catch((err) => {
         console.log('err :', err);
