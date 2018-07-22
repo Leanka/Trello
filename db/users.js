@@ -1,11 +1,11 @@
 
 var records = [];
 
-exports.setUsers = function(usersCollection) {
+export function setUsers(usersCollection) {
   records = usersCollection;
 }
 
-exports.findById = function(id, cb) {
+export function findById(id, cb) {
   process.nextTick(function() {
     for (var i = 0, len = records.length; i < len; i++) {
       var record = records[i];
@@ -17,7 +17,7 @@ exports.findById = function(id, cb) {
   });
 }
 
-exports.findByUsername = function(username, cb) {
+export function findByUsername(username, cb) {
   process.nextTick(function() {
     for (var i = 0, len = records.length; i < len; i++) {
       var record = records[i];
