@@ -8,7 +8,6 @@ var app = express();
 var bodyParser = require("body-parser");
 var db = require("./db");
 
-tools.getAllUsers();
 app.use(express.json());
 app.use(express.static(__dirname + '/'));
 app.use(bodyParser.urlencoded({extended: true}));
@@ -62,11 +61,13 @@ app.post('/register', function(req, res) {
         username: req.body.username,
         password: req.body.password
     }
+    
     tools.createUser(newUser);
-    res.redirect('/');
+    res.redirect("/login");
 });
 
 app.get('/login', function(req, res) {
+    tools.getAllUsers();
     res.sendFile("./html/login.html", {root: __dirname});
 })
 

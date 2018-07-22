@@ -1,10 +1,8 @@
-import * as tools from "../js/commonTools.js";
 
 var records = [];
 
-
 exports.setUsers = function(usersCollection) {
-   records = usersCollection;
+  records = usersCollection;
 }
 
 exports.findById = function(id, cb) {

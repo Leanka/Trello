@@ -139,8 +139,7 @@ export function createUser(newUser) {
         method: "POST",
         headers: {"Content-Type": "application/json; charset=utf-8"},
         body: JSON.stringify(newUser)
-    });
-
+    })
 }
 
 function createResource(item, insertItem, parentType, childType){
