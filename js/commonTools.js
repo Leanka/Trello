@@ -1,5 +1,6 @@
 import * as include from "./htmlInjection.js";
 import * as models from "./models.js"
+import * as db from "../db"
 import fetch from 'node-fetch'
 var backend = "https://safe-crag-70832.herokuapp.com";
 
@@ -19,6 +20,30 @@ export function loadProjectTitle(projectId, insertItem){
     })
     .then((project) => {
         insertItem(project.title);
+    })
+    .catch((err) => {
+        console.log('err :', err);
+    })
+}
+
+export function getAllUsers() {
+    let users = [];
+    fetch(`${backend}/users`)
+    .then((resp) => {
+        return resp.json()
+    })
+    .then((json) => {
+        for(let user of json) {
+            let current = new models.User(
+                user._id,
+                user.username,
+                user.password
+            )
+            users.push(current);
+        }
+    })
+    .then(() => {
+        db.users.setUsers(users);
     })
     .catch((err) => {
         console.log('err :', err);
