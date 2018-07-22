@@ -1,9 +1,6 @@
 import * as include from "./htmlInjection.js";
 import * as models from "./models.js"
 import * as dbUser from "../db/users.js"
-// import fetch from 'node-fetch'
-// var fetch = require("node-fetch");
-// import fetch from "isomorphic-fetch";
 var backend = "https://safe-crag-70832.herokuapp.com";
 
 export function loadAllComponents(components){
