@@ -15,6 +15,16 @@ html {
     overflow-y: scroll;
 }
 
+.row .container {
+    padding-top: 10%;
+}
+
+.row .container .well {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
 .jumbotron p {
     margin: 0 auto;
     left: 50%;
