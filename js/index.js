@@ -99,31 +99,21 @@ function addDropdownMenuActionListeners(doc) {
     for(let button of deleteButtons) {
         button.addEventListener("click", (event) => {tools.removeItem(event, (event) => {tools.removeProject(event)})});
     }
-    //IMPLEMENT EDIT LISTENERS
 }
 
 function dropdown(item) {
-    let parent = item.parentNode;
-    let menuIndex = 3;
-    if(parent.className != "btn-group dropright show") {
-        parent.className = "btn-group dropright show";
-        parent.childNodes[menuIndex].className = "dropdown-menu show";
-        console.log("show");
+    let dropdownMenu = item.nextElementSibling
+    if(dropdownMenu.classList.contains("show")) {
+        dropdownMenu.classList.remove("show");
     } else {
-        parent.className = "btn-group dropright";
-        parent.childNodes[menuIndex].className = "dropdown-menu";
-        console.log("no show");
+        dropdownMenu.classList.add("show");
     }
 }
 
 function editProject(projectTitleNode, projectDescriptionNode){
-    //add onchange to title, update changes live with html property?
     projectTitleNode.contentEditable = true;
     projectDescriptionNode.contentEditable = true;
     projectTitleNode.focus();
-
-    // projectTitleNode.addEventListener("blur", () => {console.log("blur event title");})
-    // projectDescriptionNode.addEventListener("blur", () => {console.log("blur event decs");})
 }
 
 function updateProject(dataToUpdate, projectId, projectElement){
