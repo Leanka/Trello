@@ -16,6 +16,7 @@ window.onload = function(){
     document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
     document.getElementById("myModal").addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {getFormData()})})
     document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
+
 }
 function setCurrentUserId(){ //wrap into promiss
     let pathnameElements = window.location.pathname.split('/');
@@ -49,9 +50,11 @@ function insertItem(item){
         //fill project card with data
         let projectTitle = projectCard.getElementsByClassName("card-title")[0] 
         projectTitle.innerText = item._title;
+        projectTitle.addEventListener("blur", () => {updateProject({"title":projectTitle.innerText}, newProjectId, projectTitle)})
 
         let projectDescription = projectCard.getElementsByClassName("card-text")[0]
         projectDescription.innerText = item._description
+        projectDescription.addEventListener("blur", () => {updateProject({"description":projectDescription.innerText}, newProjectId, projectDescription)})
 
         let deleteButton = projectCard.getElementsByClassName("delete-project-button")[0];
         deleteButton.setAttribute("identifier", newProjectId)
@@ -67,6 +70,7 @@ function insertItem(item){
         myTarget.setAttribute("href", projectPath + newProjectId);
         
         addDropdownToggleListeners(projectCard);
+        addHideDropDownMenuOnClick(projectCard)
         // addDropdownMenuActionListeners(projectCard);
     })
 }
@@ -75,6 +79,17 @@ function addDropdownToggleListeners(doc) {
     let buttons = doc.getElementsByClassName("dropdown-toggle");
     for(let item of buttons) {
         item.addEventListener("click", () => {dropdown(item)})
+    }
+}
+
+function addHideDropDownMenuOnClick(doc) {
+    let buttons = doc.getElementsByClassName("dropdown-item");
+    for(let item of buttons) {
+        item.addEventListener("click", () => {
+            if(item.parentNode.classList.contains("show")){
+                item.parentNode.classList.remove("show");
+            }
+        })
     }
 }
 
@@ -93,9 +108,11 @@ function dropdown(item) {
     if(parent.className != "btn-group dropright show") {
         parent.className = "btn-group dropright show";
         parent.childNodes[menuIndex].className = "dropdown-menu show";
+        console.log("show");
     } else {
         parent.className = "btn-group dropright";
         parent.childNodes[menuIndex].className = "dropdown-menu";
+        console.log("no show");
     }
 }
 
@@ -104,5 +121,15 @@ function editProject(projectTitleNode, projectDescriptionNode){
     projectTitleNode.contentEditable = true;
     projectDescriptionNode.contentEditable = true;
     projectTitleNode.focus();
+
+    // projectTitleNode.addEventListener("blur", () => {console.log("blur event title");})
+    // projectDescriptionNode.addEventListener("blur", () => {console.log("blur event decs");})
 }
+
+function updateProject(dataToUpdate, projectId, projectElement){
+    projectElement.contentEditable = false;
+    tools.updateResource(projectId, "projects", dataToUpdate)
+}
+
+
 
