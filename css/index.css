@@ -80,3 +80,8 @@ html, body {
 a.navbar-brand:hover {
 	opacity: .5;
 }
+
+#logout {
+    font-size: 18px;
+    margin-left: 75%;
+}
