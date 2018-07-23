@@ -12,11 +12,14 @@ html {
     height: 100%;
     width: 100%;
     position: fixed;
+    overflow-y: scroll;
 }
 
 .jumbotron p {
     margin: 0 auto;
     left: 50%;
+    padding-top: 50px;;
+    font-size: 20px;
 }
 
 #content {
@@ -36,7 +39,7 @@ h1 {
 }
 
 hr {
-    margin-top: 8%;
+    /*margin-top: 15%;*/
 	border-top: 1px solid #f8f8f8;
 	border-bottom: 1px solid rgba(0,0,0,0.2);
 }
@@ -71,6 +74,10 @@ hr {
 
 .item-3{
 	animation-name: anim-3;
+}
+
+#animate-text-container {
+    height: 80px;
 }
 
 @keyframes anim-1 {
