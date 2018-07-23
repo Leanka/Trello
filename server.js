@@ -49,7 +49,11 @@ app.get('/', function(req, res) {
     res.sendFile("./html/landing-page.html", {root: __dirname });
 });
 
-app.get('/home/:id', function(req, res) {
+app.get('/home', isLoggedIn, function(req, res) {
+    res.redirect('/home/'+req.user._key)
+});
+
+app.get('/home/:id',isLoggedIn, function(req, res) {
     res.sendFile("./html/index.html", {root: __dirname });
 });
 
@@ -62,7 +66,6 @@ app.post('/register', function(req, res) {
         username: req.body.username,
         password: req.body.password
     }
-    
     tools.createUser(newUser);
     res.redirect("/login");
 });
@@ -96,3 +99,10 @@ app.get('/project/:id', function(req, res) {
 
 //C9 listener
 app.listen(process.env.PORT, process.env.IP);
+
+function isLoggedIn(req, res, next) {
+    if(req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect("/login");
+}
