@@ -80,3 +80,12 @@ html, body {
 a.navbar-brand:hover {
 	opacity: .5;
 }
+
+/*hide caret in dropdown menu*/
+.btn-group .dropdown-toggle::after { 
+    display: none;
+}
+
+.btn-group{
+    float: right;
+}
