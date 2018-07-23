@@ -47,19 +47,27 @@ function insertItem(item){
     
     include.singleHtmlElementInsert(projectCardTemplatePath, customContainer, document.getElementById("main-project-container")).then((projectCard) => {
         //fill project card with data
-        projectCard.getElementsByClassName("card-title")[0].innerText = item._title
-        projectCard.getElementsByClassName("card-text")[0].innerText = item._description
+        let projectTitle = projectCard.getElementsByClassName("card-title")[0] 
+        projectTitle.innerText = item._title;
+
+        let projectDescription = projectCard.getElementsByClassName("card-text")[0]
+        projectDescription.innerText = item._description
 
         let deleteButton = projectCard.getElementsByClassName("delete-project-button")[0];
         deleteButton.setAttribute("identifier", newProjectId)
-        // deleteButton.addEventListener("click", (event) => {tools.removeItem(event, true)})
+        deleteButton.addEventListener("click", (event ) => {tools.removeItem(event, (event) => {tools.removeProject(event)})});
+
+        let editButton = projectCard.getElementsByClassName("edit-project-button")[0];
+        editButton.setAttribute("identifier", newProjectId)
+        editButton.addEventListener("click", (event ) => {editProject(projectTitle, projectDescription)});
+
 
         let myTarget = projectCard.getElementsByTagName("a")[0]
         let loc = myTarget.getAttribute("href")
         myTarget.setAttribute("href", projectPath + newProjectId);
         
         addDropdownToggleListeners(projectCard);
-        addDropdownMenuActionListeners(projectCard);
+        // addDropdownMenuActionListeners(projectCard);
     })
 }
 
@@ -89,5 +97,12 @@ function dropdown(item) {
         parent.className = "btn-group dropright";
         parent.childNodes[menuIndex].className = "dropdown-menu";
     }
+}
+
+function editProject(projectTitleNode, projectDescriptionNode){
+    //add onchange to title, update changes live with html property?
+    projectTitleNode.contentEditable = true;
+    projectDescriptionNode.contentEditable = true;
+    projectTitleNode.focus();
 }
 
