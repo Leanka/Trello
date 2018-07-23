@@ -1,7 +1,14 @@
 <div  class="list-title">
     <h1 class="list-title">
+        <div class="btn-group">
+            <i class="fas fa-ellipsis-h dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+            <div class="dropdown-menu">
+                    <button class="edit-project-button dropdown-item" type="button"><i class="fa fa-edit"></i> Edit </button>
+                    <button class="delete-project-button dropdown-item del-item" type="button"><i class="fa fa-trash"></i> Delete </button>
+            </div>
+        </div>
         <span class="title-field">To-Do-Title</span>
-        <i class="del-item fas fa-trash"></i>
+        <!-- <i class="del-item fas fa-trash"></i> -->
     </h1>
 </div>
 <input type="text" name="newTask" placeholder="Add new Todo">
