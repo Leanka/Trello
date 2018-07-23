@@ -1,6 +1,6 @@
-import * as include from "../js/htmlInjection.js";
-import * as models from "../js/models.js";
-import * as tools from "../js/commonTools.js";
+import * as include from "./htmlInjection.js";
+import * as models from "./models.js";
+import * as tools from "./commonTools.js";
 var localUserId;
 var projectPath = '../project/';
 var projectCardTemplatePath = "../html/project-card.html";

@@ -23,3 +23,11 @@ export class Task{
         this._parentKey = parentKey;
     }
 }
+
+export class User{
+    constructor(key, username, password) {
+        this._key = key;
+        this._username = username;
+        this._password = password;
+    }
+}
