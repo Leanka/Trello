@@ -71,7 +71,6 @@ function insertItem(item){
         
         addDropdownToggleListeners(projectCard);
         addHideDropDownMenuOnClick(projectCard)
-        // addDropdownMenuActionListeners(projectCard);
     })
 }
 
@@ -90,14 +89,6 @@ function addHideDropDownMenuOnClick(doc) {
                 item.parentNode.classList.remove("show");
             }
         })
-    }
-}
-
-function addDropdownMenuActionListeners(doc) {
-    let deleteButtons = doc.getElementsByClassName("delete-project-button");
-    let editButtons = doc.getElementsByClassName("edit-project-button");
-    for(let button of deleteButtons) {
-        button.addEventListener("click", (event) => {tools.removeItem(event, (event) => {tools.removeProject(event)})});
     }
 }
 
