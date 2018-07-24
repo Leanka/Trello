@@ -81,7 +81,34 @@ a.navbar-brand:hover {
 	opacity: .5;
 }
 
+/*hide caret in dropdown menu*/
+.btn-group .dropdown-toggle::after { 
+    display: none;
+}
+
+.btn-group{
+    float: right;
+}
+
+.task .btn-group i{
+    margin: 13px;
+}
 #logout {
     font-size: 18px;
     margin-left: 75%;
+}
+
+.task{
+    display: flex;
+    word-break: break-word;
+    height: fit-content;
+}
+
+.task-title{
+    display: flex;
+    justify-self: center;
+}
+
+.list-title{
+    word-wrap: break-word;
 }

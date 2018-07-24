@@ -16,6 +16,7 @@ window.onload = function(){
     document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
     document.getElementById("myModal").addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {getFormData()})})
     document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
+
 }
 function setCurrentUserId(){ //wrap into promiss
     let pathnameElements = window.location.pathname.split('/');
@@ -47,19 +48,29 @@ function insertItem(item){
     
     include.singleHtmlElementInsert(projectCardTemplatePath, customContainer, document.getElementById("main-project-container")).then((projectCard) => {
         //fill project card with data
-        projectCard.getElementsByClassName("card-title")[0].innerText = item._title
-        projectCard.getElementsByClassName("card-text")[0].innerText = item._description
+        let projectTitle = projectCard.getElementsByClassName("card-title")[0] 
+        projectTitle.innerText = item._title;
+        projectTitle.addEventListener("blur", () => {updateProject({"title":projectTitle.innerText}, newProjectId, projectTitle)})
+
+        let projectDescription = projectCard.getElementsByClassName("card-text")[0]
+        projectDescription.innerText = item._description
+        projectDescription.addEventListener("blur", () => {updateProject({"description":projectDescription.innerText}, newProjectId, projectDescription)})
 
         let deleteButton = projectCard.getElementsByClassName("delete-project-button")[0];
         deleteButton.setAttribute("identifier", newProjectId)
-        // deleteButton.addEventListener("click", (event) => {tools.removeItem(event, true)})
+        deleteButton.addEventListener("click", (event ) => {tools.removeItem(event, (event) => {tools.removeProject(event)})});
+
+        let editButton = projectCard.getElementsByClassName("edit-project-button")[0];
+        editButton.setAttribute("identifier", newProjectId)
+        editButton.addEventListener("click", (event ) => {editProject(projectTitle, projectDescription)});
+
 
         let myTarget = projectCard.getElementsByTagName("a")[0]
         let loc = myTarget.getAttribute("href")
         myTarget.setAttribute("href", projectPath + newProjectId);
         
         addDropdownToggleListeners(projectCard);
-        addDropdownMenuActionListeners(projectCard);
+        addHideDropDownMenuOnClick(projectCard)
     })
 }
 
@@ -70,24 +81,36 @@ function addDropdownToggleListeners(doc) {
     }
 }
 
-function addDropdownMenuActionListeners(doc) {
-    let deleteButtons = doc.getElementsByClassName("delete-project-button");
-    let editButtons = doc.getElementsByClassName("edit-project-button");
-    for(let button of deleteButtons) {
-        button.addEventListener("click", (event) => {tools.removeItem(event, (event) => {tools.removeProject(event)})});
+function addHideDropDownMenuOnClick(doc) {
+    let buttons = doc.getElementsByClassName("dropdown-item");
+    for(let item of buttons) {
+        item.addEventListener("click", () => {
+            if(item.parentNode.classList.contains("show")){
+                item.parentNode.classList.remove("show");
+            }
+        })
     }
-    //IMPLEMENT EDIT LISTENERS
 }
 
 function dropdown(item) {
-    let parent = item.parentNode;
-    let menuIndex = 3;
-    if(parent.className != "btn-group dropright show") {
-        parent.className = "btn-group dropright show";
-        parent.childNodes[menuIndex].className = "dropdown-menu show";
+    let dropdownMenu = item.nextElementSibling
+    if(dropdownMenu.classList.contains("show")) {
+        dropdownMenu.classList.remove("show");
     } else {
-        parent.className = "btn-group dropright";
-        parent.childNodes[menuIndex].className = "dropdown-menu";
+        dropdownMenu.classList.add("show");
     }
 }
+
+function editProject(projectTitleNode, projectDescriptionNode){
+    projectTitleNode.contentEditable = true;
+    projectDescriptionNode.contentEditable = true;
+    projectTitleNode.focus();
+}
+
+function updateProject(dataToUpdate, projectId, projectElement){
+    projectElement.contentEditable = false;
+    tools.updateResource(projectId, "projects", dataToUpdate)
+}
+
+
 
