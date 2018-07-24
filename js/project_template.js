@@ -67,7 +67,8 @@ function insertItem(item){
                 list.getElementsByTagName("input")[0].setAttribute("identifier", newProjectId); //input
                 setTrashSettings(list, newProjectId, (event) => {tools.removeList(event)},true);
 
-                listTitle.addEventListener("blur", () => {updateTitle({"title":listTitle.innerText}, newProjectId, listTitle, "lists")})
+                makeElementUpdatable(listTitle, () => {updateTitle(newProjectId, listTitle, "lists")})
+                // listTitle.addEventListener("blur", () => {updateTitle(newProjectId, listTitle, "lists")})
                 let editButton = list.getElementsByClassName("edit-project-button")[0];
                 editButton.addEventListener("click", (event ) => {editTitle(listTitle)});
             
@@ -105,7 +106,9 @@ function insertTask(task){
             tools.removeTask(event, () => {updateTasksOrderInList(destinationContainer.childNodes)})
         } ,false)
 
-        taskNode.addEventListener("blur", () => {updateTitle({"title":taskNode.innerText}, newItemId, taskNode, "tasks")})
+        // taskNode.addEventListener("blur", () => {updateTitle({"title":taskNode.innerText}, newItemId, taskNode, "tasks")})
+        makeElementUpdatable(taskNode, () => {updateTitle(newItemId, taskNode, "tasks")})
+
         let editButton = taskContainer.getElementsByClassName("edit-project-button")[0];
         editButton.addEventListener("click", (event ) => {editTitle(taskNode)});
 
@@ -207,11 +210,17 @@ function updateTasksOrderInList(tasksList){
 
 function editTitle(titleNode){
     titleNode.contentEditable = true;
-    titleNode.focus();
 }
 
-function updateTitle(dataToUpdate, resourceId, resourceElement, resourceType){
+function updateTitle(resourceId, resourceElement, resourceType){
     resourceElement.contentEditable = false;
-    tools.updateResource(resourceId, resourceType, dataToUpdate)
+    tools.updateResource(resourceId, resourceType, {"title":resourceElement.innerText})
 }
 
+function makeElementUpdatable(element, callback){
+    element.addEventListener("keypress", (event) => {
+        if(element.contentEditable == "true"){
+            tools.onKeyPress(event, callback)
+        }
+    })
+}
