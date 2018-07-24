@@ -106,3 +106,7 @@ a.navbar-brand:hover {
     display: flex;
     justify-self: center;
 }
+
+.list-title{
+    word-wrap: break-word;
+}
