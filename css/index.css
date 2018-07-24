@@ -125,3 +125,8 @@ a.navbar-brand:hover {
 .list-title{
     word-wrap: break-word;
 }
+
+[contenteditable="true"]{
+    border: 2px solid rgb(231, 76, 60);
+    background-color: rgb(231, 76, 60, 0.3);
+}
