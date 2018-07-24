@@ -5,7 +5,20 @@ html, body {
   height: 100%;
 }
 #new-project-button {
-    font-size: 32px;
+    margin-right: 1%;
+}
+
+#new-project-button .fa-plus-square:before {
+    margin-right: 10px;
+}
+
+.btn-outline-danger {
+    border-color: #e74c3c;
+}
+
+.btn-outline-danger:hover {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
 }
 
 /* The Modal (background) */
