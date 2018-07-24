@@ -61,10 +61,15 @@ function insertItem(item){
             include.singleHtmlElementInsert(listTemplatePath, customContainer, document.getElementById("main-project-container"))
             .then((list) =>{
                 // fill project card with data
-                list.querySelectorAll("span.title-field")[0].innerText = item._title; //setting title
+                let listTitle = list.querySelectorAll("span.title-field")[0]
+                listTitle.innerText = item._title; //setting title
                 list.getElementsByClassName("todo-list")[0].setAttribute("identifier", newProjectId)
                 list.getElementsByTagName("input")[0].setAttribute("identifier", newProjectId); //input
                 setTrashSettings(list, newProjectId, (event) => {tools.removeList(event)},true);
+
+                listTitle.addEventListener("blur", () => {updateTitle({"title":listTitle.innerText}, newProjectId, listTitle, "lists")})
+                let editButton = list.getElementsByClassName("edit-project-button")[0];
+                editButton.addEventListener("click", (event ) => {editTitle(listTitle)});
             
                 var inputField = list.getElementsByClassName("list-title")[0].nextElementSibling; //adding new event
                 inputField.addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {addNewTaskToList(event)})})
@@ -73,8 +78,8 @@ function insertItem(item){
             })
             .catch(err => console.error(err));
         })
-    
 }
+
 
 function insertTask(task){
     var newItemId = task._key;
@@ -99,6 +104,10 @@ function insertTask(task){
         setTrashSettings(taskContainer, newItemId,(event) => {
             tools.removeTask(event, () => {updateTasksOrderInList(destinationContainer.childNodes)})
         } ,false)
+
+        taskNode.addEventListener("blur", () => {updateTitle({"title":taskNode.innerText}, newItemId, taskNode, "tasks")})
+        let editButton = taskContainer.getElementsByClassName("edit-project-button")[0];
+        editButton.addEventListener("click", (event ) => {editTitle(taskNode)});
 
         tools.updateResource(newItemId, "tasks", {"position": destinationContainer.childElementCount-1})
     })
@@ -195,3 +204,14 @@ function updateTasksOrderInList(tasksList){
         ++index
     }
 }
+
+function editTitle(titleNode){
+    titleNode.contentEditable = true;
+    titleNode.focus();
+}
+
+function updateTitle(dataToUpdate, resourceId, resourceElement, resourceType){
+    resourceElement.contentEditable = false;
+    tools.updateResource(resourceId, resourceType, dataToUpdate)
+}
+
