@@ -78,10 +78,7 @@ function insertItem(item){
 
 function makeElementUpdatable(element, callback){
     element.addEventListener("keypress", (event) => {
-        console.log("key pressed");
-        console.log(element.contentEditable);
         if(element.contentEditable == "true"){
-            console.log("enter pressed");
             tools.onKeyPress(event, callback)
         }
         })
