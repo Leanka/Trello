@@ -101,6 +101,7 @@ a.navbar-brand:hover {
 .task{
     display: flex;
     word-break: break-word;
+    height: fit-content;
 }
 
 .task-title{
