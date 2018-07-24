@@ -97,3 +97,12 @@ a.navbar-brand:hover {
     font-size: 18px;
     margin-left: 75%;
 }
+
+.task{
+    display: flex;
+}
+
+.task-title{
+    display: flex;
+    justify-self: center;
+}
