@@ -89,6 +89,10 @@ a.navbar-brand:hover {
 .btn-group{
     float: right;
 }
+
+.task .btn-group i{
+    margin: 13px;
+}
 #logout {
     font-size: 18px;
     margin-left: 75%;
