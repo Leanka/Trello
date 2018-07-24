@@ -50,11 +50,13 @@ function insertItem(item){
         //fill project card with data
         let projectTitle = projectCard.getElementsByClassName("card-title")[0] 
         projectTitle.innerText = item._title;
-        projectTitle.addEventListener("blur", () => {updateProject({"title":projectTitle.innerText}, newProjectId, projectTitle)})
 
         let projectDescription = projectCard.getElementsByClassName("card-text")[0]
         projectDescription.innerText = item._description
-        projectDescription.addEventListener("blur", () => {updateProject({"description":projectDescription.innerText}, newProjectId, projectDescription)})
+
+        makeElementUpdatable(projectDescription, () => {updateProject(newProjectId, projectCard)})
+        makeElementUpdatable(projectTitle, () => {updateProject(newProjectId, projectCard)})
+
 
         let deleteButton = projectCard.getElementsByClassName("delete-project-button")[0];
         deleteButton.setAttribute("identifier", newProjectId)
@@ -72,6 +74,17 @@ function insertItem(item){
         addDropdownToggleListeners(projectCard);
         addHideDropDownMenuOnClick(projectCard)
     })
+}
+
+function makeElementUpdatable(element, callback){
+    element.addEventListener("keypress", (event) => {
+        console.log("key pressed");
+        console.log(element.contentEditable);
+        if(element.contentEditable == "true"){
+            console.log("enter pressed");
+            tools.onKeyPress(event, callback)
+        }
+        })
 }
 
 function addDropdownToggleListeners(doc) {
@@ -104,12 +117,16 @@ function dropdown(item) {
 function editProject(projectTitleNode, projectDescriptionNode){
     projectTitleNode.contentEditable = true;
     projectDescriptionNode.contentEditable = true;
-    projectTitleNode.focus();
 }
 
-function updateProject(dataToUpdate, projectId, projectElement){
-    projectElement.contentEditable = false;
-    tools.updateResource(projectId, "projects", dataToUpdate)
+function updateProject(projectId, parentElement){
+    let title = parentElement.getElementsByClassName("card-title")[0];
+    let desc = parentElement.getElementsByClassName("card-text")[0];
+
+    title.contentEditable = false;
+    desc.contentEditable = false;
+
+    tools.updateResource(projectId, "projects", {"description":desc.innerText.trim(), "title":title.innerText.trim()})
 }
 
 
