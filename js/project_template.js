@@ -209,7 +209,9 @@ function updateTasksOrderInList(tasksList){
 }
 
 function editTitle(titleNode){
-    titleNode.contentEditable = true;
+    if (!titleNode.classList.contains("cross-over")){
+        titleNode.contentEditable = true;
+    }
 }
 
 function updateTitle(resourceId, resourceElement, resourceType){
