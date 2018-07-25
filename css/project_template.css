@@ -20,8 +20,6 @@ ul {
 
 li {
 	background: white;
-	height: 40px;
-	line-height: 40px;
 	color: #666;
 }
 
@@ -47,7 +45,7 @@ input:focus {
 
 .container li span {
 	background: #e74c3c;
-	height: 40px;
+	height: 100%;
 	margin-right: 20px;
 	text-align: center;
 	color: white;
