@@ -7,6 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="../css/landing-page.css">
 	<link rel="stylesheet" type="text/css" media="screen" href="../css/footer.css" />
 	<script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 	<script defer type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="../js/landing.js" type="module"></script>
 </head>
@@ -20,15 +21,15 @@
         				<span class="icon-bar"></span>
        		 			<span class="icon-bar"></span>
      				</button>
-     				 <a class="navbar-brand" href="../html/landing-page.html">Trelolo</a>
+     				 <a class="navbar-brand" href="../">Trelolo</a>
    				 </div>
   		  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     		<ul class="nav navbar-nav">
-    			<li class="active"><a href="../html/index.html">My projects</a></li>
+    			<li class="active"><a href="/home">My projects</a></li>
      		</ul>
     		<ul class="nav navbar-nav navbar-right">
-     		    <li><a href="#">Sign Up <i class="fas fa-user-plus"></i></a></li>
-     		    <li><a href="#">Login <i class="fas fa-user"></i></a></li>
+     		    <li><a href="/register">Sign Up <i class="fas fa-user-plus"></i></a></li>
+     		    <li><a href="/login">Login <i class="fas fa-user"></i></a></li>
      		</ul>
    		  </div>
   		</div>
@@ -36,12 +37,14 @@
 	<div id="content" class="container">
         <div class="jumbotron">
           <h1 class="display-4">Welcome to TRELOLO!</h1>
-          <p class="item-1">Work more efficiently.</p>
-          <p class="item-2">Plan your projects in a simple way.</p>
-          <p class="item-3">Top app of 2018 according to Non-Existen Journal</p>
-          <hr class="my-4">
+          <div id="animate-text-container">
+            <p class="item-1">Work more efficiently.</p>
+            <p class="item-2">Plan your projects in a simple way.</p>
+            <p class="item-3">Top app of 2018 according to Non-Existen Journal</p>
+          </div>
           <p class="lead">
-            <a class="btn btn-primary btn-lg continue" href="index.html" role="button">Continue</a>
+            <hr class="my-4">
+            <a class="btn btn-primary btn-lg continue" href="/home" role="button">Continue</a>
           </p>
         </div>
 	</div>
@@ -49,6 +52,6 @@
     <div class="footer-copyright text-center py-3">
         <p>Copyright @ Trelolo Team Codecool Cracow 2018</p>
     </div>
-</footer>
+    </footer>
 </body>
 </html>

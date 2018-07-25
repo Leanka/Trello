@@ -20,8 +20,6 @@ ul {
 
 li {
 	background: white;
-	height: 40px;
-	line-height: 40px;
 	color: #666;
 }
 
@@ -47,7 +45,7 @@ input:focus {
 
 .container li span {
 	background: #e74c3c;
-	height: 40px;
+	height: 100%;
 	margin-right: 20px;
 	text-align: center;
 	color: white;
@@ -107,14 +105,13 @@ p {
 	text-align: center;
 }
 
-h1 .fa-trash {
-	float: right;
+h1 .fa {
 	font-size: 16px;
 	opacity: 0.7;
 	margin: auto;
 }
 
-h1 .fa-trash:hover {
+h1 .fa :hover {
 	opacity: 1;
 }
 
@@ -131,9 +128,6 @@ h1 .fa-trash:hover {
 	border-color: #2980b9;
 }
 
-#current-project-title {
-	margin-left: 10px;
-}
 
 #add-new-list-container {
 	width: 90%;
@@ -151,3 +145,7 @@ h1 .fa-trash:hover {
 a.navbar-brand:hover {
 	opacity: .5;
 }
+
+.cross-over {
+	text-decoration: line-through;
+  }

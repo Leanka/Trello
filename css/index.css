@@ -5,7 +5,20 @@ html, body {
   height: 100%;
 }
 #new-project-button {
-    font-size: 32px;
+    margin-right: 1%;
+}
+
+#new-project-button .fa-plus-square:before {
+    margin-right: 10px;
+}
+
+.btn-outline-danger {
+    border-color: #e74c3c;
+}
+
+.btn-outline-danger:hover {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
 }
 
 /* The Modal (background) */
@@ -79,4 +92,41 @@ html, body {
 
 a.navbar-brand:hover {
 	opacity: .5;
+}
+
+/*hide caret in dropdown menu*/
+.btn-group .dropdown-toggle::after { 
+    display: none;
+}
+
+.btn-group{
+    float: right;
+}
+
+.task .btn-group i{
+    margin: 13px;
+}
+#logout {
+    font-size: 18px;
+    margin-left: 75%;
+}
+
+.task{
+    display: flex;
+    word-break: break-word;
+    height: fit-content;
+}
+
+.task-title{
+    display: flex;
+    justify-self: center;
+}
+
+.list-title{
+    word-wrap: break-word;
+}
+
+[contenteditable="true"]{
+    border: 2px solid rgb(231, 76, 60);
+    background-color: rgb(231, 76, 60, 0.3);
 }

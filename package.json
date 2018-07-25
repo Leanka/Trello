@@ -1,0 +1,35 @@
+{
+  "name": "trello",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "babel-node --presets es2015 server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Leanka/Trello.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Leanka/Trello/issues"
+  },
+  "homepage": "https://github.com/Leanka/Trello#readme",
+  "dependencies": {
+    "babel-cli": "^6.0.0",
+    "babel-preset-es2015": "^6.0.0",
+    "body-parser": "^1.18.3",
+    "connect-ensure-login": "^0.1.1",
+    "cookie-parser": "^1.4.3",
+    "es6-promise": "^4.2.4",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "isomorphic-fetch": "^2.2.1",
+    "morgan": "^1.9.0",
+    "node-fetch": "^2.1.2",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
+  }
+}

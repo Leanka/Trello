@@ -1,4 +1,7 @@
-import * as include from "../js/htmlInjection.js";
+import * as include from "./htmlInjection.js";
+import * as models from "./models.js"
+import * as dbUser from "../db/users.js"
+var backend = "https://safe-crag-70832.herokuapp.com";
 
 export function loadAllComponents(components){
     let allPromises = [];
@@ -9,14 +12,103 @@ export function loadAllComponents(components){
     return Promise.all(allPromises);
 }
 
-export function getCounter(){
-    if(localStorage.counter){
-        localStorage.counter = Number(localStorage.counter) + 1
-    }else{
-        localStorage.counter = 1
-    }
-    return localStorage.counter
+export function loadProjectTitle(projectId, insertItem){
+    fetch(`${backend}/projects/${projectId}`)
+    .then((resp) => {
+        return resp.json()
+    })
+    .then((project) => {
+        insertItem(project.title);
+    })
+    .catch((err) => {
+        console.log('err :', err);
+    })
+}
 
+export function getAllUsers() {
+    let users = [];
+    fetch(`${backend}/users`)
+    .then((resp) => {
+        return resp.json()
+    })
+    .then((json) => {
+        for(let user of json) {
+            let current = new models.User(
+                user._id,
+                user.username,
+                user.password
+            )
+            users.push(current);
+        }
+    })
+    .then(() => {
+        dbUser.setUsers(users);
+    })
+    .catch((err) => {
+        console.log('err :', err);
+    })
+}
+
+export function loadAllProjects(localUserId, insertItem){
+    fetch(`${backend}/users/${localUserId}/projects`)
+    .then((resp) => {
+        return resp.json()
+    })
+    .then((json) => {
+        for(let project of json){
+            let current = new models.Project(
+                project._id,
+                project.title,
+                project.description,
+                project.parentKey.id
+            )
+            insertItem(current);
+        }
+    })
+    .catch((err) => {
+        console.log('err :', err);
+    })
+}
+
+export function loadAllLists(projectId, insertList, insertTasks){
+    fetch(`${backend}/projects/${projectId}/lists`)
+    .then((resp) => {
+        return resp.json()
+    })
+    .then((json) => {
+        for(let list of json){
+            let current = new models.List(
+                list._id,
+                list.title,
+                list.parentKey.id
+            )
+            insertList(current).then(()=>loadAllTasks(current._key, insertTasks))
+        }
+    })
+    .catch((err) => {
+        console.log('err :', err);
+    })
+}
+
+function loadAllTasks(listId, insertItem){
+    fetch(`${backend}/lists/${listId}/tasks`)
+    .then((resp) => {
+        return resp.json()
+    })
+    .then((json) => {
+        for(let task of json){
+            let current = new models.Task(
+                task._id,
+                task.title,
+                task.status,
+                task.parentKey.id
+            )
+            insertItem(current);
+        }
+    })
+    .catch((err) => {
+        console.log('err :', err);
+    })
 }
 
 export function parseQuery(queryString) {
@@ -29,54 +121,102 @@ export function parseQuery(queryString) {
     return query.key
 }
 
-export function parseJsonToClassInstance(classType, json){
-    let jasonData = JSON.parse(json)
-    let values = [];
+export function createProject(item, insertItem){
+    createResource(item, insertItem, "users", "projects");
+}
+
+export function createList(item, insertItem){
+    createResource(item, insertItem, "projects", "lists");
+}
+
+export function createTask(item, insertItem){
+    createResource(item, insertItem, "lists", "tasks");
+}
+
+export function createUser(newUser) {
+    fetch(`${backend}/users/`,{
+        method: "POST",
+        headers: {"Content-Type": "application/json; charset=utf-8"},
+        body: JSON.stringify(newUser)
+    })
+}
+
+function createResource(item, insertItem, parentType, childType){
+    fetch(`${backend}/${parentType}/${item.parentKey.id}/${childType}`,{
+        method: "POST",
+        headers: {"Content-Type": "application/json; charset=utf-8"},
+        body: JSON.stringify(item)
+    })
+    .then((resp) => { 
+        return resp.json()
+    })
+    .then((data) => {
+        insertNewResource(item, data.id, childType, insertItem);
+    }).catch((err) => {
+        console.log('err :', err);
+    })
+}
+
+function insertNewResource(item, id, resourceType, insertResource){
+    switch (resourceType) {
+        case "tasks":
+            insertResource(new models.Task(id, item.title, item.status, item.parentKey.id));
+            break;
+        case "lists":
+            insertResource(new models.List(id, item.title, item.parentKey.id));
+            break;
+        case "projects":
+            insertResource(new models.Project(id, item.title, item.description, item.parentKey.id));
+            break;
     
-    for(let key in jasonData){
-        values.push(jasonData[key])
+        default:
+            break;
     }
-
-    return new classType(...values)
 }
 
-export function createItem(item, insertItem){
-    saveItem(item); //save to local storage
-    insertItem(item)//create & insert new card
+export function updateResource(id, resourceType, dataToUpdate){
+    fetch(`${backend}/${resourceType}/${id}`,{
+        method: "PATCH",
+        headers: {"Content-Type": "application/json; charset=utf-8"},
+        body: JSON.stringify(dataToUpdate)
+    })
+    .catch((err) => {
+        console.log('err :', err);
+    })
 }
 
-export function removeItem(event, hasNestedResources) {
-    let identifier = event.target.getAttribute("identifier")
-    
+export function removeItem(event, removeResource) {
     if(confirm('Remove?')) {
-      silentRemove(event);
-      if(hasNestedResources){
-        removeNestedResources(identifier)
-        }
+        removeResource(event);
     }
 }
 
-function removeNestedResources(itemKey) {
-    for(let key in localStorage){
-        if(key.includes("list-") || key.includes("task-")){
-            let item = JSON.parse(localStorage.getItem(key))
-            if(item && (item._parentKey == itemKey)){
-                localStorage.removeItem(key);
-                removeNestedResources(item._key);
-
-            }
-        }
-    }
+export function removeTask(event, updateTergetListOrder){
+    removeResource(event, "tasks", updateTergetListOrder);
 }
 
-export function silentRemove(event){
+export function removeList(event){
+    removeResource(event, "lists");
+}
+
+export function removeProject(event){
+    removeResource(event, "projects");
+}
+
+function removeResource(event, resourceType, next){
     let identifier = event.target.getAttribute("identifier");
-    localStorage.removeItem(identifier);
-    document.getElementById(identifier).remove()
-}
-
-export function saveItem(item){
-    localStorage.setItem(item._key, JSON.stringify(item))
+    fetch(`${backend}/${resourceType}/${identifier}`,{
+        method: "DELETE"
+    })
+    .then(() => {
+        document.getElementById(identifier).remove();
+        if(next){
+            next()
+        }
+    })
+    .catch((err) => {
+        console.log('err :', err);
+    })
 }
 
 export function onKeyPress(event, callback){

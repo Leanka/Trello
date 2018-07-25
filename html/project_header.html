@@ -1,11 +1,36 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/">Trelolo</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
+
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <a class="navbar-brand" href="../html/landing-page.html">Trelolo</a>
-    <a class="navbar-brand" href="../html/index.html">My Projects <span class="sr-only">(current)</span></a>
-    <span id="current-project-title" class="navbar-brand" >Project Name</span>
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/home">My Projects <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active">
+        <a id="current-project-title" class="nav-link">Project Name <span class="sr-only">(current)</span></a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0" action="/logout" method="GET">
+      <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Logout</button>
+    </form>
   </div>
 </nav>
+
+
+<!--<nav class="navbar navbar-expand-lg navbar-light bg-light">-->
+<!--  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--    <span class="navbar-toggler-icon"></span>-->
+<!--  </button>-->
+<!--  <div class="collapse navbar-collapse" id="navbarSupportedContent">-->
+<!--    <a class="navbar-brand" href="../">Trelolo</a>-->
+<!--    <a class="navbar-brand" href="/home">My Projects <span class="sr-only">(current)</span></a>-->
+<!--    <span id="current-project-title" class="navbar-brand" >Project Name</span>-->
+<!--    <a class="navbar-brand" id="logout" href="/logout"><i class="fas fa-sign-out-alt"></i>-->
+<!--      Logout-->
+<!--    </a>-->
+<!--  </div>-->
+<!--</nav>-->
 

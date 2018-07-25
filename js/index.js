@@ -1,24 +1,26 @@
-import * as include from "../js/htmlInjection.js";
-import * as models from "../js/models.js";
-import * as tools from "../js/commonTools.js";
+import * as include from "./htmlInjection.js";
+import * as models from "./models.js";
+import * as tools from "./commonTools.js";
+var localUserId;
+var projectPath = '../project/';
+var projectCardTemplatePath = "../html/project-card.html";
 
 
 window.onload = function(){
+    setCurrentUserId();
     tools.loadAllComponents(document.querySelectorAll("[data-filepath]"));
-    loadAllProjects();
-    
+    tools.loadAllProjects(localUserId, (item) => {insertItem(item)});
+
+
     document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
     document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
     document.getElementById("myModal").addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {getFormData()})})
     document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
-}
 
-function loadAllProjects(){
-    for(let key in localStorage){
-        if(key.includes("project")){
-            insertItem(tools.parseJsonToClassInstance(models.Project, localStorage.getItem(key)));
-        }
-    }
+}
+function setCurrentUserId(){ //wrap into promiss
+    let pathnameElements = window.location.pathname.split('/');
+    localUserId = pathnameElements[pathnameElements.length - 1];
 }
 
 function getFormData(){
@@ -29,8 +31,10 @@ function getFormData(){
         document.getElementById("title").value = ""; //clear fields after getting user input
         document.getElementById("description").value = "";
         document.getElementById("myModal").style.display = "none"; //hide form
-        tools.createItem(new models.Project(`project-${tools.getCounter()}`, title, description), (item)=>{insertItem(item)});
         document.getElementById("new-project-button").focus()
+
+        let item = {"title": title, "description":description, "parentKey":{"id":localUserId}}
+        tools.createProject(item, (item)=>{insertItem(item)});
     } else {
         alert("Please enter both project title and description!");
     }
@@ -42,22 +46,42 @@ function insertItem(item){
     let customContainer = document.createElement("div");
     customContainer.setAttribute("id", newProjectId)
     
-    include.singleHtmlElementInsert("../html/project-card.html", customContainer, document.getElementById("main-project-container")).then((projectCard) => {
+    include.singleHtmlElementInsert(projectCardTemplatePath, customContainer, document.getElementById("main-project-container")).then((projectCard) => {
         //fill project card with data
-        projectCard.getElementsByClassName("card-title")[0].innerText = item._title
-        projectCard.getElementsByClassName("card-text")[0].innerText = item._description
+        let projectTitle = projectCard.getElementsByClassName("card-title")[0] 
+        projectTitle.innerText = item._title;
+
+        let projectDescription = projectCard.getElementsByClassName("card-text")[0]
+        projectDescription.innerText = item._description
+
+        makeElementUpdatable(projectDescription, () => {updateProject(newProjectId, projectCard)})
+        makeElementUpdatable(projectTitle, () => {updateProject(newProjectId, projectCard)})
+
 
         let deleteButton = projectCard.getElementsByClassName("delete-project-button")[0];
         deleteButton.setAttribute("identifier", newProjectId)
-        // deleteButton.addEventListener("click", (event) => {tools.removeItem(event, true)})
+        deleteButton.addEventListener("click", (event ) => {tools.removeItem(event, (event) => {tools.removeProject(event)})});
+
+        let editButton = projectCard.getElementsByClassName("edit-project-button")[0];
+        editButton.setAttribute("identifier", newProjectId)
+        editButton.addEventListener("click", (event ) => {editProject(projectTitle, projectDescription)});
+
 
         let myTarget = projectCard.getElementsByTagName("a")[0]
         let loc = myTarget.getAttribute("href")
-        myTarget.setAttribute("href", loc + '?key=' + newProjectId);
+        myTarget.setAttribute("href", projectPath + newProjectId);
         
         addDropdownToggleListeners(projectCard);
-        addDropdownMenuActionListeners(projectCard);
+        addHideDropDownMenuOnClick(projectCard)
     })
+}
+
+function makeElementUpdatable(element, callback){
+    element.addEventListener("keypress", (event) => {
+        if(element.contentEditable == "true"){
+            tools.onKeyPress(event, callback)
+        }
+        })
 }
 
 function addDropdownToggleListeners(doc) {
@@ -67,24 +91,40 @@ function addDropdownToggleListeners(doc) {
     }
 }
 
-function addDropdownMenuActionListeners(doc) {
-    let deleteButtons = doc.getElementsByClassName("delete-project-button");
-    let editButtons = doc.getElementsByClassName("edit-project-button");
-    for(let button of deleteButtons) {
-        button.addEventListener("click", (event) => {tools.removeItem(event, true)});
+function addHideDropDownMenuOnClick(doc) {
+    let buttons = doc.getElementsByClassName("dropdown-item");
+    for(let item of buttons) {
+        item.addEventListener("click", () => {
+            if(item.parentNode.classList.contains("show")){
+                item.parentNode.classList.remove("show");
+            }
+        })
     }
-    //IMPLEMENT EDIT LISTENERS
 }
 
 function dropdown(item) {
-    let parent = item.parentNode;
-    let menuIndex = 3;
-    if(parent.className != "btn-group dropright show") {
-        parent.className = "btn-group dropright show";
-        parent.childNodes[menuIndex].className = "dropdown-menu show";
+    let dropdownMenu = item.nextElementSibling
+    if(dropdownMenu.classList.contains("show")) {
+        dropdownMenu.classList.remove("show");
     } else {
-        parent.className = "btn-group dropright";
-        parent.childNodes[menuIndex].className = "dropdown-menu";
+        dropdownMenu.classList.add("show");
     }
 }
+
+function editProject(projectTitleNode, projectDescriptionNode){
+    projectTitleNode.contentEditable = true;
+    projectDescriptionNode.contentEditable = true;
+}
+
+function updateProject(projectId, parentElement){
+    let title = parentElement.getElementsByClassName("card-title")[0];
+    let desc = parentElement.getElementsByClassName("card-text")[0];
+
+    title.contentEditable = false;
+    desc.contentEditable = false;
+
+    tools.updateResource(projectId, "projects", {"description":desc.innerText.trim(), "title":title.innerText.trim()})
+}
+
+
 
