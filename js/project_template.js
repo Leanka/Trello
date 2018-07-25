@@ -119,14 +119,16 @@ function strikeTask(taskId){
     let task = taskContainer.getElementsByClassName("task-title")[0];
 
     let newStatus;
-    if(task.classList.contains("cross-over")){
-        task.classList.remove("cross-over");
-        newStatus = {"status":"todo"};
-    }else{
-        task.classList.add("cross-over");
-        newStatus = {"status":"done"};
-    }
-    tools.updateResource(taskId, "tasks", newStatus)
+    if(task.contentEditable == "false"){
+        if(task.classList.contains("cross-over")){
+            task.classList.remove("cross-over");
+            newStatus = {"status":"todo"};
+        }else{
+            task.classList.add("cross-over");
+            newStatus = {"status":"done"};
+        }
+        tools.updateResource(taskId, "tasks", newStatus)
+    }   
 }
 
 function setTrashSettings(container, itemId, removeResource, confirmation){
