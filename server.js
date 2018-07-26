@@ -7,7 +7,9 @@ var passport = require("passport");
 var Strategy = require("passport-local").Strategy;
 var app = express();
 var bodyParser = require("body-parser");
+var flash = require("connect-flash");
 var db = require("./db");
+var session = require('express-session');
 
 app.use(express.json());
 app.use(express.static(__dirname + '/'));
@@ -18,7 +20,8 @@ passport.use(new Strategy(
     function(username, password, cb) {
         db.users.findByUsername(username, function(err, user) {
             if(err) { return cb(err); }
-            if(!user) {return cb(null, false); }
+            if(!user) {
+                return cb(null, false, { message: 'Incorrect username or password' }); }
             if(user._password != password) {return cb(null, false);}
             return cb(null, user);
         });
@@ -37,10 +40,20 @@ passport.deserializeUser(function(id, cb) {
 
 app.use(require("morgan")("combined"));
 app.use(require('cookie-parser')());
-app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
+app.use(session({ cookie: { maxAge: 60000 }, 
+                  secret: 'woot',
+                  resave: false, 
+                  saveUninitialized: false}));
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(flash());
+app.use(function(req, res, next) {
+    res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");
+    next();
+});
 
 var HTTP_PORT = 8890;
 
@@ -68,6 +81,7 @@ app.post('/register', function(req, res) {
         password: req.body.password
     }
     tools.createUser(newUser);
+    req.flash("success", "Register was succesfull, you can now login");
     res.redirect("/login");
 });
 
@@ -77,7 +91,9 @@ app.get('/login', function(req, res) {
 })
 
 app.post('/login', 
-  passport.authenticate('local', { failureRedirect: '/login' }),
+  passport.authenticate('local',
+  { failureRedirect: '/login' ,
+    failureFlash: true}),
   function(req, res) {
     res.redirect("/home/"+req.user._key);
   });
@@ -85,6 +101,7 @@ app.post('/login',
 app.get('/logout',
   function(req, res){
     req.logout();
+    req.flash("success", "Succesfully logged You out!");
     res.redirect('/');
   });
   
