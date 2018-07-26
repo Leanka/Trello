@@ -12,6 +12,7 @@ var db = require("./db");
 app.use(express.json());
 app.use(express.static(__dirname + '/'));
 app.use(bodyParser.urlencoded({extended: true}));
+app.set('view engine', 'ejs');
 
 passport.use(new Strategy(
     function(username, password, cb) {
@@ -46,7 +47,7 @@ var HTTP_PORT = 8890;
 http.createServer(app).listen(HTTP_PORT, (err) => {})
 
 app.get('/', function(req, res) {
-    res.sendFile("./html/landing-page.html", {root: __dirname });
+    res.render("pages/landing-page", {root: __dirname });
 });
 
 app.get('/home', isLoggedIn, function(req, res) {
@@ -54,11 +55,11 @@ app.get('/home', isLoggedIn, function(req, res) {
 });
 
 app.get('/home/:id',isLoggedIn, function(req, res) {
-    res.sendFile("./html/index.html", {root: __dirname });
+    res.render("pages/index", {root: __dirname });
 });
 
 app.get('/register', function(req, res) {
-    res.sendFile("./html/register.html", {root: __dirname});
+    res.render("pages/register", {root: __dirname});
 });
 
 app.post('/register', function(req, res) {
@@ -72,7 +73,7 @@ app.post('/register', function(req, res) {
 
 app.get('/login', function(req, res) {
     tools.getAllUsers();
-    res.sendFile("./html/login.html", {root: __dirname});
+    res.render("pages/login", {root: __dirname});
 })
 
 app.post('/login', 
@@ -94,7 +95,7 @@ app.get('/profile',
   });
 
 app.get('/project/:id', function(req, res) {
-    res.sendFile("./html/project_template.html", {root: __dirname });
+    res.render("pages/project_template", {root: __dirname });
 });
 
 //C9 listener

@@ -3,7 +3,7 @@ import * as models from "./models.js";
 import * as tools from "./commonTools.js";
 var localUserId;
 var projectPath = '../project/';
-var projectCardTemplatePath = "../html/project-card.html";
+var projectCardTemplatePath = "../views/partials/project-card.ejs";
 
 
 window.onload = function(){
