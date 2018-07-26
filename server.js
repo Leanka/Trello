@@ -1,5 +1,5 @@
 import * as tools from "./js/commonTools.js";
-import "isomorphic-fetch";
+// import "isomorphic-fetch";
 
 var http = require("http");
 var express = require("express");
