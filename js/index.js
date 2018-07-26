@@ -27,7 +27,7 @@ function getFormData(){
     let title = document.getElementById("title").value.trim();
     let description = document.getElementById("description").value.trim();
     
-    if((title.length > 0) && (description.length > 0)) {
+    if(title.length > 0) {
         document.getElementById("title").value = ""; //clear fields after getting user input
         document.getElementById("description").value = "";
         document.getElementById("myModal").style.display = "none"; //hide form
@@ -36,7 +36,7 @@ function getFormData(){
         let item = {"title": title, "description":description, "parentKey":{"id":localUserId}}
         tools.createProject(item, (item)=>{insertItem(item)});
     } else {
-        alert("Please enter both project title and description!");
+        alert("Please enter project title!");
     }
 }
 
