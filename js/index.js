@@ -117,13 +117,20 @@ function editProject(projectTitleNode, projectDescriptionNode){
 }
 
 function updateProject(projectId, parentElement){
-    let title = parentElement.getElementsByClassName("card-title")[0];
-    let desc = parentElement.getElementsByClassName("card-text")[0];
+    let titleNode = parentElement.getElementsByClassName("card-title")[0];
+    let descNode = parentElement.getElementsByClassName("card-text")[0];
 
-    title.contentEditable = false;
-    desc.contentEditable = false;
+    let title = titleNode.innerText.trim();
+    let description = descNode.innerText.trim();
 
-    tools.updateResource(projectId, "projects", {"description":desc.innerText.trim(), "title":title.innerText.trim()})
+    if(title.length == 0){
+        alert("Title cannot be empty!")
+    }else{
+        titleNode.contentEditable = false;
+        descNode.contentEditable = false;
+    
+        tools.updateResource(projectId, "projects", {"description":description, "title":title})
+    }
 }
 
 
