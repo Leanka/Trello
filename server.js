@@ -81,6 +81,7 @@ app.post('/register', function(req, res) {
         password: req.body.password
     }
     tools.createUser(newUser);
+    req.flash("success", "Register was succesfull, you can now login");
     res.redirect("/login");
 });
 
@@ -100,6 +101,7 @@ app.post('/login',
 app.get('/logout',
   function(req, res){
     req.logout();
+    req.flash("success", "Succesfully logged You out!");
     res.redirect('/');
   });
   
