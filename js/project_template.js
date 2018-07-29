@@ -215,6 +215,7 @@ function editTitle(titleNode){
         alert("Cannot edit done task!")
     }else{
         titleNode.contentEditable = true;
+        titleNode.focus();
 
     }
 }
@@ -226,6 +227,7 @@ function updateTitle(resourceId, resourceElement, resourceType){
         alert("Title cannot be empty!")
     }else{
         resourceElement.contentEditable = false;
+        resourceElement.blur();
         tools.updateResource(resourceId, resourceType, {"title":title})
     }
 }
