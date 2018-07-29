@@ -211,8 +211,11 @@ function updateTasksOrderInList(tasksList){
 }
 
 function editTitle(titleNode){
-    if (!titleNode.classList.contains("cross-over")){
+    if (titleNode.classList.contains("cross-over")){
+        alert("Cannot edit done task!")
+    }else{
         titleNode.contentEditable = true;
+
     }
 }
 
