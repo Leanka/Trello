@@ -1,40 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Trelolo</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet"> 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
-	<link rel="stylesheet" type="text/css" href="../css/landing-page.css">
-	<link rel="stylesheet" type="text/css" media="screen" href="../css/footer.css" />
-	<script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-	<script defer type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-<body>
-  	<nav class="navbar navbar-default">
- 		  <div class="container">
-   				<div class="navbar-header">
-    		  		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        				<span class="sr-only">Toggle navigation</span>
-        				<span class="icon-bar"></span>
-        				<span class="icon-bar"></span>
-       		 			<span class="icon-bar"></span>
-     				</button>
-     				 <a class="navbar-brand" href="../">Trelolo</a>
-   				 </div>
-  		  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-    		<ul class="nav navbar-nav">
-    			<li class="active"><a href="/home">My projects</a></li>
-     		</ul>
-    		<ul class="nav navbar-nav navbar-right">
-     		    <li><a href="/register">Sign Up <i class="fas fa-user-plus"></i></a></li>
-     		    <li><a href="/login">Login <i class="fas fa-user"></i></a></li>
-     		</ul>
-   		  </div>
-  		</div>
-	</nav>
-	<div id="content" class="container">
+
+  <% include ../partials/landing-header %>
+	<div class="content container">
         <div class="jumbotron">
           <h1 class="display-4">Welcome to TRELOLO!</h1>
           <div id="auth-message" class="container">
@@ -60,10 +26,4 @@
           </p>
         </div>
 	</div>
-	<footer class="footer">
-    <div class="footer-copyright text-center py-3">
-        <p>Copyright @ Trelolo Team Codecool Cracow 2018</p>
-    </div>
-    </footer>
-</body>
-</html>
+  <% include ../partials/footer %>
