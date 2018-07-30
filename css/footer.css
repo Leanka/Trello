@@ -11,11 +11,6 @@
     margin: 10px 0;
 }
 
-footer p {
-    margin-top: 10px;
-    
-}
-
 .footer-top {
     padding-top: 10px;
     padding-bottom: 10px;
@@ -30,4 +25,8 @@ footer p {
 .copyrights {
     background: #e7e7e7;
     border-top: 1px solid #7777;
+}
+
+#copyrights-text {
+    margin: 5px auto;
 }
