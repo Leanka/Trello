@@ -1,16 +1,33 @@
-footer {
+.footer {
     font-size: 12px;
-    background-color: #f8f9fa;
+    background-color: #f8f8f8;
     bottom: 0;
     width: 100%;
-    text-align: center;
     position: fixed;
-    height : 40px;
     color: #777;
-    border: 3px solid #f8f8f8;
+}
+
+.footer hr {
+    margin: 10px 0;
 }
 
 footer p {
     margin-top: 10px;
     
+}
+
+.footer-top {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.footer-top .row {
+    margin: 0 25%;
+}
+
+.copyrights {
+    background: #e7e7e7;
+    border-top: 1px solid #7777;
 }
