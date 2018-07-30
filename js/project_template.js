@@ -215,6 +215,7 @@ function editTitle(titleNode){
         alert("Cannot edit done task!")
     }else{
         titleNode.contentEditable = true;
+        setParentDragabillity(titleNode);
         titleNode.focus();
 
     }
@@ -227,8 +228,16 @@ function updateTitle(resourceId, resourceElement, resourceType){
         alert("Title cannot be empty!")
     }else{
         resourceElement.contentEditable = false;
+        setParentDragabillity(resourceElement);
         resourceElement.blur();
         tools.updateResource(resourceId, resourceType, {"title":title})
+    }
+}
+
+function setParentDragabillity(titleNode){
+    if(titleNode.classList.contains("task-title")){
+        let draggable = titleNode.parentNode.draggable;
+        titleNode.parentNode.draggable = !draggable;
     }
 }
 
