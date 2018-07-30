@@ -211,14 +211,25 @@ function updateTasksOrderInList(tasksList){
 }
 
 function editTitle(titleNode){
-    if (!titleNode.classList.contains("cross-over")){
+    if (titleNode.classList.contains("cross-over")){
+        alert("Cannot edit done task!")
+    }else{
         titleNode.contentEditable = true;
+        titleNode.focus();
+
     }
 }
 
 function updateTitle(resourceId, resourceElement, resourceType){
-    resourceElement.contentEditable = false;
-    tools.updateResource(resourceId, resourceType, {"title":resourceElement.innerText})
+    let title = resourceElement.innerText.trim();
+
+    if(title.length == 0){
+        alert("Title cannot be empty!")
+    }else{
+        resourceElement.contentEditable = false;
+        resourceElement.blur();
+        tools.updateResource(resourceId, resourceType, {"title":title})
+    }
 }
 
 function makeElementUpdatable(element, callback){

@@ -128,5 +128,7 @@ a.navbar-brand:hover {
 
 [contenteditable="true"]{
     border: 2px solid rgb(231, 76, 60);
-    background-color: rgb(231, 76, 60, 0.3);
+    background-color: rgb(243, 188, 154);
+    display: inline-block;
+    min-width: 200px;
 }
