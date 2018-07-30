@@ -2,7 +2,7 @@ import * as include from "../js/htmlInjection.js";
 import * as models from "../js/models.js";
 import * as tools from "../js/commonTools.js";
 var currentProjectId;
-var listTemplatePath = "../html/list-template.html";
+var listTemplatePath = "../views/partials/list-template.ejs";
 
 window.onload = function(){
     setCurrentProjectId();
@@ -93,7 +93,7 @@ function insertTask(task){
     
 
     let destinationContainer = document.getElementById(task._parentKey).getElementsByTagName("ul")[0];
-    include.singleHtmlElementInsert("../html/task-template.html", customContainer, destinationContainer)
+    include.singleHtmlElementInsert("../views/partials/task-template.ejs", customContainer, destinationContainer)
     .then((taskContainer) => {
         let taskNode = taskContainer.getElementsByClassName("task-title")[0];
         taskNode.innerText = task._title;
@@ -211,14 +211,34 @@ function updateTasksOrderInList(tasksList){
 }
 
 function editTitle(titleNode){
-    if (!titleNode.classList.contains("cross-over")){
+    if (titleNode.classList.contains("cross-over")){
+        alert("Cannot edit done task!")
+    }else{
         titleNode.contentEditable = true;
+        setParentDragabillity(titleNode);
+        titleNode.focus();
+
     }
 }
 
 function updateTitle(resourceId, resourceElement, resourceType){
-    resourceElement.contentEditable = false;
-    tools.updateResource(resourceId, resourceType, {"title":resourceElement.innerText})
+    let title = resourceElement.innerText.trim();
+
+    if(title.length == 0){
+        alert("Title cannot be empty!")
+    }else{
+        resourceElement.contentEditable = false;
+        setParentDragabillity(resourceElement);
+        resourceElement.blur();
+        tools.updateResource(resourceId, resourceType, {"title":title})
+    }
+}
+
+function setParentDragabillity(titleNode){
+    if(titleNode.classList.contains("task-title")){
+        let draggable = titleNode.parentNode.draggable;
+        titleNode.parentNode.draggable = !draggable;
+    }
 }
 
 function makeElementUpdatable(element, callback){

@@ -1,9 +1,9 @@
 import * as include from "./htmlInjection.js";
-import * as models from "./models.js";
 import * as tools from "./commonTools.js";
+
 var localUserId;
 var projectPath = '../project/';
-var projectCardTemplatePath = "../html/project-card.html";
+var projectCardTemplatePath = "../views/partials/project-card.ejs";
 
 
 window.onload = function(){
@@ -27,7 +27,7 @@ function getFormData(){
     let title = document.getElementById("title").value.trim();
     let description = document.getElementById("description").value.trim();
     
-    if((title.length > 0) && (description.length > 0)) {
+    if(title.length > 0) {
         document.getElementById("title").value = ""; //clear fields after getting user input
         document.getElementById("description").value = "";
         document.getElementById("myModal").style.display = "none"; //hide form
@@ -36,7 +36,7 @@ function getFormData(){
         let item = {"title": title, "description":description, "parentKey":{"id":localUserId}}
         tools.createProject(item, (item)=>{insertItem(item)});
     } else {
-        alert("Please enter both project title and description!");
+        alert("Please enter project title!");
     }
 }
 
@@ -117,13 +117,20 @@ function editProject(projectTitleNode, projectDescriptionNode){
 }
 
 function updateProject(projectId, parentElement){
-    let title = parentElement.getElementsByClassName("card-title")[0];
-    let desc = parentElement.getElementsByClassName("card-text")[0];
+    let titleNode = parentElement.getElementsByClassName("card-title")[0];
+    let descNode = parentElement.getElementsByClassName("card-text")[0];
 
-    title.contentEditable = false;
-    desc.contentEditable = false;
+    let title = titleNode.innerText.trim();
+    let description = descNode.innerText.trim();
 
-    tools.updateResource(projectId, "projects", {"description":desc.innerText.trim(), "title":title.innerText.trim()})
+    if(title.length == 0){
+        alert("Title cannot be empty!")
+    }else{
+        titleNode.contentEditable = false;
+        descNode.contentEditable = false;
+    
+        tools.updateResource(projectId, "projects", {"description":description, "title":title})
+    }
 }
 
 

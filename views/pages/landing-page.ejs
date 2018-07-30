@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>Trelolo</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet"> 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
 	<link rel="stylesheet" type="text/css" href="../css/landing-page.css">
@@ -9,7 +10,6 @@
 	<script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 	<script defer type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="../js/landing.js" type="module"></script>
 </head>
 <body>
   	<nav class="navbar navbar-default">
@@ -37,6 +37,18 @@
 	<div id="content" class="container">
         <div class="jumbotron">
           <h1 class="display-4">Welcome to TRELOLO!</h1>
+          <div id="auth-message" class="container">
+            <% if(error && error.length > 0){ %>
+                <div class="alert alert-danger" role="alert">
+                    <%= error %>
+                </div>
+            <% } %>
+            <% if(success && success.length > 0){ %>
+                <div class="alert alert-success" role="alert">
+                    <%= success %>
+                </div>
+            <% } %>
+          </div>
           <div id="animate-text-container">
             <p class="item-1">Work more efficiently.</p>
             <p class="item-2">Plan your projects in a simple way.</p>
