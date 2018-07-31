@@ -10,6 +10,7 @@ var bodyParser = require("body-parser");
 var flash = require("connect-flash");
 var db = require("./db");
 var session = require('express-session');
+var request = require('request');
 
 app.use(express.json());
 app.use(express.static(__dirname + '/'));
@@ -90,8 +91,18 @@ app.get('/login', function(req, res) {
     res.render("pages/login", {root: __dirname});
 })
 
-app.post('/login', 
-  passport.authenticate('local',
+app.post('/login', function(req, res, next) {
+    request.post('https://trello-like-app-f4tall.c9users.io/api/login', {form:{username:req.body.username,
+                                                                               password:req.body.password
+    }}, function(err,httpResponse,body){
+        if(err) {
+            console.log(err);
+        } else {
+            console.log(body);
+            next;
+        }
+    })
+}, passport.authenticate('local',
   { failureRedirect: '/login' ,
     failureFlash: true}),
   function(req, res) {
