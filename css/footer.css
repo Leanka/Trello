@@ -1,9 +1,13 @@
+#footer-container {
+    bottom:0;
+    width: 100%;
+}
+
 .footer {
     font-size: 12px;
     background-color: #f8f8f8;
     bottom: 0;
     width: 100%;
-    position: fixed;
     color: #777;
 }
 
@@ -12,6 +16,7 @@
 }
 
 .footer-top {
+    background: #e7e7e7;
     padding-top: 10px;
     padding-bottom: 10px;
     font-size: 16px;
@@ -27,6 +32,18 @@
     border-top: 1px solid #7777;
 }
 
+.list-group-item {
+    padding: 5px 10px;
+}
+
+.list-group-item {
+    padding: 5px 10px;
+}
+
 #copyrights-text {
     margin: 5px auto;
+}
+
+#tech-list {
+    text-align: left;
 }
