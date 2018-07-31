@@ -211,14 +211,34 @@ function updateTasksOrderInList(tasksList){
 }
 
 function editTitle(titleNode){
-    if (!titleNode.classList.contains("cross-over")){
+    if (titleNode.classList.contains("cross-over")){
+        alert("Cannot edit done task!")
+    }else{
         titleNode.contentEditable = true;
+        setParentDragabillity(titleNode);
+        titleNode.focus();
+
     }
 }
 
 function updateTitle(resourceId, resourceElement, resourceType){
-    resourceElement.contentEditable = false;
-    tools.updateResource(resourceId, resourceType, {"title":resourceElement.innerText})
+    let title = resourceElement.innerText.trim();
+
+    if(title.length == 0){
+        alert("Title cannot be empty!")
+    }else{
+        resourceElement.contentEditable = false;
+        setParentDragabillity(resourceElement);
+        resourceElement.blur();
+        tools.updateResource(resourceId, resourceType, {"title":title})
+    }
+}
+
+function setParentDragabillity(titleNode){
+    if(titleNode.classList.contains("task-title")){
+        let draggable = titleNode.parentNode.draggable;
+        titleNode.parentNode.draggable = !draggable;
+    }
 }
 
 function makeElementUpdatable(element, callback){
