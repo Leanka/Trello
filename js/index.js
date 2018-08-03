@@ -73,7 +73,7 @@ function insertItem(item){
 
         let deleteButton = projectCard.getElementsByClassName("delete-project-button")[0];
         deleteButton.setAttribute("identifier", newProjectId)
-        deleteButton.addEventListener("click", (event ) => {tools.removeItem(event, (event) => {tools.removeProject(event)}, accessToken)});
+        deleteButton.addEventListener("click", (event ) => {tools.removeItem(event, (event) => {tools.removeProject(event, accessToken)}, accessToken)});
 
         let editButton = projectCard.getElementsByClassName("edit-project-button")[0];
         editButton.setAttribute("identifier", newProjectId)

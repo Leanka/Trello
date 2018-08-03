@@ -59,24 +59,17 @@ export function loadAllProjects(localUserId, insertItem, accessToken){
         headers: {'authorization': accessToken}
     })
     .then((resp) => {
-        console.log("1 OK")
         return resp.json()
     })
     .then((json) => {
-        console.log("2 OK")
-        console.log(json)
         for(let project of json){
-            console.log("3 OK")
-            console.log("Parent key: " + project.parentKey)
             let current = new models.Project(
                 project._id,
                 project.title,
                 project.description,
                 project.parentKey.id
             )
-            console.log("4 OK")
             insertItem(current);
-            console.log("5 OK")
         }
     })
     .catch((err) => {
@@ -164,12 +157,13 @@ function createResource(item, insertItem, parentType, childType, accessToken){
     fetch(`${backend}/${parentType}/${item.parentKey.id}/${childType}`,{
         method: "POST",
         headers: {"Content-Type": "application/json; charset=utf-8",
-                  "authorization": accessToken
+                   "authorization": accessToken
         },
         body: JSON.stringify(item)
-    })
-    .then((data) => {
-        insertNewResource(item, data.id, childType, insertItem);
+    }).then((resp) => {
+        return resp.json()
+    }).then((data) => {
+        insertNewResource(item, data._id, childType, insertItem);
     }).catch((err) => {
         console.log('err :', err);
     })
