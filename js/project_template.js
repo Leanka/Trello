@@ -1,5 +1,4 @@
 import * as include from "../js/htmlInjection.js";
-import * as models from "../js/models.js";
 import * as tools from "../js/commonTools.js";
 var currentProjectId;
 var accessToken;
@@ -7,7 +6,7 @@ var listTemplatePath = "../views/partials/list-template.ejs";
 
 window.onload = function(){
     setCurrentProjectId();
-    accessToken = cookieSearch('accessToken');
+    accessToken = tools.cookieSearch('accessToken');
     tools.loadAllComponents(document.querySelectorAll("[data-filepath]")).then(() => {
         setCurrentProjectName()
     }).catch((err) => {console.log('err :', err);})
@@ -19,18 +18,6 @@ window.onload = function(){
     document.getElementById("myModal").addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {getFormData()})})
     document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
     addKeyListenersToInputs();
-}
-
-function cookieSearch(key) {
-  let c = document.cookie,
-    result;
-
-  if (c.includes(`${key}=`)) {
-    result = `${c.split(`${key}=`)[1].split(`;`)[0]}`;
-  } else {
-    result = `Key not found in cookie.`;
-  }
-  return result;
 }
 
 function setCurrentProjectId(){ //wrap into promiss

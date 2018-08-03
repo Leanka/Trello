@@ -8,7 +8,7 @@ var projectCardTemplatePath = "../views/partials/project-card.ejs";
 
 window.onload = function(){
     setCurrentUserId();
-    accessToken = cookieSearch('accessToken');
+    accessToken = tools.cookieSearch('accessToken');
     tools.loadAllComponents(document.querySelectorAll("[data-filepath]"));
     tools.loadAllProjects(localUserId, (item) => {insertItem(item)}, accessToken);
 
@@ -17,18 +17,6 @@ window.onload = function(){
     document.getElementById("myModal").addEventListener('keypress', (event) => {tools.onKeyPress(event, () => {getFormData()})})
     document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
 
-}
-
-function cookieSearch(key) {
-  let c = document.cookie,
-    result;
-
-  if (c.includes(`${key}=`)) {
-    result = `${c.split(`${key}=`)[1].split(`;`)[0]}`;
-  } else {
-    result = `Key not found in cookie.`;
-  }
-  return result;
 }
 
 function setCurrentUserId(){ //wrap into promiss
@@ -145,6 +133,3 @@ function updateProject(projectId, parentElement){
         tools.updateResource(projectId, "projects", {"description":description, "title":title}, accessToken)
     }
 }
-
-
-

@@ -241,3 +241,15 @@ export function onKeyPress(event, callback){
         callback()
     }
 }
+
+export function cookieSearch(key) {
+  let cookie = document.cookie,
+    result;
+
+  if (cookie.includes(`${key}=`)) {
+    result = `${cookie.split(`${key}=`)[1].split(`;`)[0]}`;
+  } else {
+    result = `Key not found in cookie.`;
+  }
+  return result;
+}
