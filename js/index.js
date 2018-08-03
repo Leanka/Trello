@@ -2,15 +2,15 @@ import * as include from "./htmlInjection.js";
 import * as tools from "./commonTools.js";
 
 var localUserId;
+var accessToken;
 var projectPath = '../project/';
 var projectCardTemplatePath = "../views/partials/project-card.ejs";
 
-
 window.onload = function(){
     setCurrentUserId();
+    accessToken = cookieSearch('accessToken');
     tools.loadAllComponents(document.querySelectorAll("[data-filepath]"));
-    tools.loadAllProjects(localUserId, (item) => {insertItem(item)});
-
+    tools.loadAllProjects(localUserId, (item) => {insertItem(item)}, accessToken);
 
     document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
     document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
@@ -18,6 +18,19 @@ window.onload = function(){
     document.getElementById("modal-submit").addEventListener("click", () => {getFormData()})
 
 }
+
+function cookieSearch(key) {
+  let c = document.cookie,
+    result;
+
+  if (c.includes(`${key}=`)) {
+    result = `${c.split(`${key}=`)[1].split(`;`)[0]}`;
+  } else {
+    result = `Key not found in cookie.`;
+  }
+  return result;
+}
+
 function setCurrentUserId(){ //wrap into promiss
     let pathnameElements = window.location.pathname.split('/');
     localUserId = pathnameElements[pathnameElements.length - 1];
@@ -34,7 +47,7 @@ function getFormData(){
         document.getElementById("new-project-button").focus()
 
         let item = {"title": title, "description":description, "parentKey":{"id":localUserId}}
-        tools.createProject(item, (item)=>{insertItem(item)});
+        tools.createProject(item, (item)=>{insertItem(item)}, accessToken);
     } else {
         alert("Please enter project title!");
     }
@@ -60,7 +73,7 @@ function insertItem(item){
 
         let deleteButton = projectCard.getElementsByClassName("delete-project-button")[0];
         deleteButton.setAttribute("identifier", newProjectId)
-        deleteButton.addEventListener("click", (event ) => {tools.removeItem(event, (event) => {tools.removeProject(event)})});
+        deleteButton.addEventListener("click", (event ) => {tools.removeItem(event, (event) => {tools.removeProject(event)}, accessToken)});
 
         let editButton = projectCard.getElementsByClassName("edit-project-button")[0];
         editButton.setAttribute("identifier", newProjectId)
@@ -129,7 +142,7 @@ function updateProject(projectId, parentElement){
         titleNode.contentEditable = false;
         descNode.contentEditable = false;
     
-        tools.updateResource(projectId, "projects", {"description":description, "title":title})
+        tools.updateResource(projectId, "projects", {"description":description, "title":title}, accessToken)
     }
 }
 

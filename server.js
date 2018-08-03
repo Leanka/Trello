@@ -11,6 +11,8 @@ var flash = require("connect-flash");
 var db = require("./db");
 var session = require('express-session');
 var request = require('request');
+var store = require('store')
+var accessToken = "none";
 
 app.use(express.json());
 app.use(express.static(__dirname + '/'));
@@ -41,7 +43,7 @@ passport.deserializeUser(function(id, cb) {
 
 app.use(require("morgan")("combined"));
 app.use(require('cookie-parser')());
-app.use(session({ cookie: { maxAge: 60000 }, 
+app.use(session({ cookie: { maxAge: 3600000 }, // 1 hour
                   secret: 'woot',
                   resave: false, 
                   saveUninitialized: false}));
@@ -87,41 +89,55 @@ app.post('/register', function(req, res) {
 });
 
 app.get('/login', function(req, res) {
-    tools.getAllUsers();
     res.render("pages/login", {root: __dirname});
 })
 
 app.post('/login', function(req, res, next) {
-    request.post('https://trello-like-app-f4tall.c9users.io/api/login', {form:{username:req.body.username,
-                                                                               password:req.body.password
-    }}, function(err,httpResponse,body){
-        if(err) {
-            console.log(err);
-        } else {
-            console.log(body);
-            next;
-        }
-    })
-}, passport.authenticate('local',
-  { failureRedirect: '/login' ,
-    failureFlash: true}),
-  function(req, res) {
-    res.redirect("/home/"+req.user._key);
-  });
-  
+    var postData = {
+      username: req.body.username,
+      password: req.body.password
+    }
+
+    var url = 'https://trello-like-app-f4tall.c9users.io/api/login';
+    var options = {
+        method: 'post',
+        body: postData,
+        json: true,
+        url: url
+    }
+    
+    request(options, function (err, res, body) {
+      if (err) {
+        console.error('error posting json: ', err)
+        throw err;
+      } else {
+          if(body.token !== undefined) {
+             accessToken = "Bearer%" + body.token;
+             tools.getAllUsers(accessToken);
+          }
+          setTimeout(function(){
+              next();
+          }, 1000);
+      }
+    })}, passport.authenticate('local',
+      { 
+        failureRedirect: '/login' ,
+        failureFlash: true}),
+        function(req, res, next) {
+            res.cookie('accessToken', accessToken);
+            next();
+        },
+        function(req, res) {
+            res.redirect("/home/"+req.user._key);
+      });
+      
 app.get('/logout',
   function(req, res){
     req.logout();
     req.flash("success", "Succesfully logged You out!");
     res.redirect('/');
   });
-  
-app.get('/profile',
-  require('connect-ensure-login').ensureLoggedIn(),
-  function(req, res){
-    res.render('profile', { user: req.user });
-  });
-
+ 
 app.get('/project/:id', function(req, res) {
     res.render("pages/project_template", {root: __dirname });
 });
