@@ -10,6 +10,8 @@ var bodyParser = require("body-parser");
 var flash = require("connect-flash");
 var db = require("./db");
 var session = require('express-session');
+var request = require('request');
+var accessToken = "none";
 
 app.use(express.json());
 app.use(express.static(__dirname + '/'));
@@ -40,7 +42,7 @@ passport.deserializeUser(function(id, cb) {
 
 app.use(require("morgan")("combined"));
 app.use(require('cookie-parser')());
-app.use(session({ cookie: { maxAge: 60000 }, 
+app.use(session({ cookie: { maxAge: 3600000 }, // 1 hour
                   secret: 'woot',
                   resave: false, 
                   saveUninitialized: false}));
@@ -86,31 +88,57 @@ app.post('/register', function(req, res) {
 });
 
 app.get('/login', function(req, res) {
-    tools.getAllUsers();
     res.render("pages/login", {root: __dirname});
 })
 
-app.post('/login', 
-  passport.authenticate('local',
-  { failureRedirect: '/login' ,
-    failureFlash: true}),
-  function(req, res) {
-    res.redirect("/home/"+req.user._key);
-  });
-  
+app.post('/login', function(req, res, next) {
+    var postData = {
+      username: req.body.username,
+      password: req.body.password
+    }
+
+    var url = 'https://safe-crag-70832.herokuapp.com/api/login';
+    // var url = process.env.BACKEND + '/api/login';
+
+    var options = {
+        method: 'post',
+        body: postData,
+        json: true,
+        url: url
+    }
+    
+    request(options, function (err, res, body) {
+      if (err) {
+        console.error('error posting json: ', err)
+        throw err;
+      } else {
+          if(body.token !== undefined) {
+             accessToken = "Bearer%" + body.token;
+             tools.getAllUsers(accessToken);
+          }
+          setTimeout(function(){
+              next();
+          }, 1000);
+      }
+    })}, passport.authenticate('local',
+      { 
+        failureRedirect: '/login' ,
+        failureFlash: true}),
+        function(req, res, next) {
+            res.cookie('accessToken', accessToken);
+            next();
+        },
+        function(req, res) {
+            res.redirect("/home/"+req.user._key);
+      });
+      
 app.get('/logout',
   function(req, res){
     req.logout();
     req.flash("success", "Succesfully logged You out!");
     res.redirect('/');
   });
-  
-app.get('/profile',
-  require('connect-ensure-login').ensureLoggedIn(),
-  function(req, res){
-    res.render('profile', { user: req.user });
-  });
-
+ 
 app.get('/project/:id', function(req, res) {
     res.render("pages/project_template", {root: __dirname });
 });
