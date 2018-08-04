@@ -11,7 +11,6 @@ var flash = require("connect-flash");
 var db = require("./db");
 var session = require('express-session');
 var request = require('request');
-var store = require('store')
 var accessToken = "none";
 
 app.use(express.json());
@@ -98,7 +97,9 @@ app.post('/login', function(req, res, next) {
       password: req.body.password
     }
 
-    var url = 'https://trello-like-app-f4tall.c9users.io/api/login';
+    var url = 'https://safe-crag-70832.herokuapp.com/api/login';
+    // var url = process.env.BACKEND + '/api/login';
+
     var options = {
         method: 'post',
         body: postData,

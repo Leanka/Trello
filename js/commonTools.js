@@ -2,7 +2,8 @@ import * as include from "./htmlInjection.js";
 import * as models from "./models.js"
 import * as dbUser from "../db/users.js"
 
-var backend = "https://trello-like-app-f4tall.c9users.io";
+   var backend = "https://safe-crag-70832.herokuapp.com";
+// var backend = "https://trello-like-app-f4tall.c9users.io";
 
 export function loadAllComponents(components){
     let allPromises = [];
