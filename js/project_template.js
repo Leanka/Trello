@@ -1,18 +1,17 @@
 import * as include from "../js/htmlInjection.js";
-import * as models from "../js/models.js";
 import * as tools from "../js/commonTools.js";
 var currentProjectId;
+var accessToken;
 var listTemplatePath = "../views/partials/list-template.ejs";
 
 window.onload = function(){
     setCurrentProjectId();
-
+    accessToken = tools.cookieSearch('accessToken');
     tools.loadAllComponents(document.querySelectorAll("[data-filepath]")).then(() => {
         setCurrentProjectName()
     }).catch((err) => {console.log('err :', err);})
 
-    tools.loadAllLists(currentProjectId, (list) => insertItem(list), (task) => insertTask(task));
-    // loadAllLists(projectKey)
+    tools.loadAllLists(currentProjectId, (list) => insertItem(list), (task) => insertTask(task), accessToken);
 
     document.getElementById("close").addEventListener("click", () => {document.getElementById("myModal").style.display = "none"})
     document.getElementById("myModal").addEventListener("click", (event) => {event.target == document.getElementById("myModal")? event.target.style.display = "none":""})
@@ -29,7 +28,7 @@ function setCurrentProjectId(){ //wrap into promiss
 function setCurrentProjectName(){
     tools.loadProjectTitle(currentProjectId, (title) => {
         document.getElementById("current-project-title").innerText = title;
-    })
+    }, accessToken);
 }
 
 function getFormData(){
@@ -40,7 +39,7 @@ function getFormData(){
         document.getElementById("myModal").style.display = "none"; //hide form
 
         let item = {"title": title, "parentKey":{"id":currentProjectId}}
-        tools.createList(item, (item)=>{insertItem(item)});
+        tools.createList(item, (item)=>{insertItem(item)}, accessToken);
     } else {
         alert("List title cannot be empty!");
     }
@@ -65,7 +64,7 @@ function insertItem(item){
                 listTitle.innerText = item._title; //setting title
                 list.getElementsByClassName("todo-list")[0].setAttribute("identifier", newProjectId)
                 list.getElementsByTagName("input")[0].setAttribute("identifier", newProjectId); //input
-                setTrashSettings(list, newProjectId, (event) => {tools.removeList(event)},true);
+                setTrashSettings(list, newProjectId, (event) => {tools.removeList(event, accessToken)},true);
 
                 makeElementUpdatable(listTitle, () => {updateTitle(newProjectId, listTitle, "lists")})
                 // listTitle.addEventListener("blur", () => {updateTitle(newProjectId, listTitle, "lists")})
@@ -103,7 +102,7 @@ function insertTask(task){
         }
 
         setTrashSettings(taskContainer, newItemId,(event) => {
-            tools.removeTask(event, () => {updateTasksOrderInList(destinationContainer.childNodes)})
+            tools.removeTask(event, accessToken, () => {updateTasksOrderInList(destinationContainer.childNodes)})
         } ,false)
 
         // taskNode.addEventListener("blur", () => {updateTitle({"title":taskNode.innerText}, newItemId, taskNode, "tasks")})
@@ -112,7 +111,7 @@ function insertTask(task){
         let editButton = taskContainer.getElementsByClassName("edit-project-button")[0];
         editButton.addEventListener("click", (event ) => {editTitle(taskNode)});
 
-        tools.updateResource(newItemId, "tasks", {"position": destinationContainer.childElementCount-1})
+        tools.updateResource(newItemId, "tasks", {"position": destinationContainer.childElementCount-1}, accessToken);
     })
 
 }
@@ -130,7 +129,7 @@ function strikeTask(taskId){
             task.classList.add("cross-over");
             newStatus = {"status":"done"};
         }
-        tools.updateResource(taskId, "tasks", newStatus)
+        tools.updateResource(taskId, "tasks", newStatus, accessToken);
     }   
 }
 
@@ -139,7 +138,7 @@ function setTrashSettings(container, itemId, removeResource, confirmation){
     trash.setAttribute("identifier", itemId)
 
     if(confirmation){
-        trash.addEventListener("click", (event) => {tools.removeItem(event, removeResource)});
+        trash.addEventListener("click", (event) => {tools.removeItem(event, removeResource, accessToken)});
     }else{
         trash.addEventListener("click", (event) => {removeResource(event)});
     }
@@ -152,7 +151,7 @@ function addNewTaskToList(ev) {
   ev.target.value = '';
     if(taskTitle.length > 0) {
         let item = {"title": taskTitle, "parentKey":{"id":listId}};
-        tools.createTask(item, (task) => {insertTask(task)})
+        tools.createTask(item, (task) => {insertTask(task)}, accessToken)
     } else {
         alert("Task name cannot be empty!");
     }
@@ -196,16 +195,16 @@ function handleTaskDrop(ev, id){
         updateTasksOrderInList(destinationNode.childNodes)
     }else{
         destinationNode.appendChild(document.getElementById(data));
-        tools.updateResource(data, "tasks", {"position": destinationNode.childElementCount-1}) //len of list -1 - item is already there, position values start at 0, not 1
+        tools.updateResource(data, "tasks", {"position": destinationNode.childElementCount-1}, accessToken) //len of list -1 - item is already there, position values start at 0, not 1
     }
-    tools.updateResource(data, "tasks", {"parentKey": {"id": id}});
+    tools.updateResource(data, "tasks", {"parentKey": {"id": id}}, accessToken);
 }
 
 function updateTasksOrderInList(tasksList){
     let index = 0;
     for(let task of tasksList){
         let taskId = task.getAttribute("id");
-        tools.updateResource(taskId, "tasks", {"position":index})
+        tools.updateResource(taskId, "tasks", {"position":index}, accessToken)
         ++index
     }
 }
@@ -230,7 +229,7 @@ function updateTitle(resourceId, resourceElement, resourceType){
         resourceElement.contentEditable = false;
         setParentDragabillity(resourceElement);
         resourceElement.blur();
-        tools.updateResource(resourceId, resourceType, {"title":title})
+        tools.updateResource(resourceId, resourceType, {"title":title}, accessToken)
     }
 }
 

@@ -1,7 +1,9 @@
 import * as include from "./htmlInjection.js";
 import * as models from "./models.js"
 import * as dbUser from "../db/users.js"
-var backend = "https://safe-crag-70832.herokuapp.com";
+
+   var backend = "https://safe-crag-70832.herokuapp.com";
+// var backend = "https://trello-like-app-f4tall.c9users.io";
 
 export function loadAllComponents(components){
     let allPromises = [];
@@ -12,8 +14,10 @@ export function loadAllComponents(components){
     return Promise.all(allPromises);
 }
 
-export function loadProjectTitle(projectId, insertItem){
-    fetch(`${backend}/projects/${projectId}`)
+export function loadProjectTitle(projectId, insertItem, accessToken){
+    fetch(`${backend}/projects/${projectId}`, {
+        headers: {'authorization': accessToken}
+    })
     .then((resp) => {
         return resp.json()
     })
@@ -25,9 +29,11 @@ export function loadProjectTitle(projectId, insertItem){
     })
 }
 
-export function getAllUsers() {
+export function getAllUsers(accessToken) {
     let users = [];
-    fetch(`${backend}/users`)
+    fetch(`${backend}/users`, {
+        headers: {'authorization': accessToken}
+    })
     .then((resp) => {
         return resp.json()
     })
@@ -49,8 +55,10 @@ export function getAllUsers() {
     })
 }
 
-export function loadAllProjects(localUserId, insertItem){
-    fetch(`${backend}/users/${localUserId}/projects`)
+export function loadAllProjects(localUserId, insertItem, accessToken){
+    fetch(`${backend}/users/${localUserId}/projects`, {
+        headers: {'authorization': accessToken}
+    })
     .then((resp) => {
         return resp.json()
     })
@@ -70,8 +78,10 @@ export function loadAllProjects(localUserId, insertItem){
     })
 }
 
-export function loadAllLists(projectId, insertList, insertTasks){
-    fetch(`${backend}/projects/${projectId}/lists`)
+export function loadAllLists(projectId, insertList, insertTasks, accessToken){
+    fetch(`${backend}/projects/${projectId}/lists`, {
+        headers: {'authorization': accessToken}
+    })
     .then((resp) => {
         return resp.json()
     })
@@ -82,7 +92,7 @@ export function loadAllLists(projectId, insertList, insertTasks){
                 list.title,
                 list.parentKey.id
             )
-            insertList(current).then(()=>loadAllTasks(current._key, insertTasks))
+            insertList(current).then(()=>loadAllTasks(current._key, insertTasks, accessToken))
         }
     })
     .catch((err) => {
@@ -90,8 +100,10 @@ export function loadAllLists(projectId, insertList, insertTasks){
     })
 }
 
-function loadAllTasks(listId, insertItem){
-    fetch(`${backend}/lists/${listId}/tasks`)
+function loadAllTasks(listId, insertItem, accessToken){
+    fetch(`${backend}/lists/${listId}/tasks`, {
+        headers: {'authorization': accessToken}
+    })
     .then((resp) => {
         return resp.json()
     })
@@ -121,37 +133,38 @@ export function parseQuery(queryString) {
     return query.key
 }
 
-export function createProject(item, insertItem){
-    createResource(item, insertItem, "users", "projects");
+export function createProject(item, insertItem, accessToken){
+    createResource(item, insertItem, "users", "projects", accessToken);
 }
 
-export function createList(item, insertItem){
-    createResource(item, insertItem, "projects", "lists");
+export function createList(item, insertItem, accessToken){
+    createResource(item, insertItem, "projects", "lists", accessToken);
 }
 
-export function createTask(item, insertItem){
-    createResource(item, insertItem, "lists", "tasks");
+export function createTask(item, insertItem, accessToken){
+    createResource(item, insertItem, "lists", "tasks", accessToken);
 }
 
-export function createUser(newUser) {
+export function createUser(newUser, accessToken) {
     fetch(`${backend}/users/`,{
         method: "POST",
-        headers: {"Content-Type": "application/json; charset=utf-8"},
+        headers: {"Content-Type": "application/json; charset=utf-8",
+        },
         body: JSON.stringify(newUser)
     })
 }
 
-function createResource(item, insertItem, parentType, childType){
+function createResource(item, insertItem, parentType, childType, accessToken){
     fetch(`${backend}/${parentType}/${item.parentKey.id}/${childType}`,{
         method: "POST",
-        headers: {"Content-Type": "application/json; charset=utf-8"},
+        headers: {"Content-Type": "application/json; charset=utf-8",
+                   "authorization": accessToken
+        },
         body: JSON.stringify(item)
-    })
-    .then((resp) => { 
+    }).then((resp) => {
         return resp.json()
-    })
-    .then((data) => {
-        insertNewResource(item, data.id, childType, insertItem);
+    }).then((data) => {
+        insertNewResource(item, data._id, childType, insertItem);
     }).catch((err) => {
         console.log('err :', err);
     })
@@ -174,10 +187,12 @@ function insertNewResource(item, id, resourceType, insertResource){
     }
 }
 
-export function updateResource(id, resourceType, dataToUpdate){
+export function updateResource(id, resourceType, dataToUpdate, accessToken){
     fetch(`${backend}/${resourceType}/${id}`,{
         method: "PATCH",
-        headers: {"Content-Type": "application/json; charset=utf-8"},
+        headers: {"Content-Type": "application/json; charset=utf-8",
+                  "authorization": accessToken
+        },
         body: JSON.stringify(dataToUpdate)
     })
     .catch((err) => {
@@ -185,28 +200,29 @@ export function updateResource(id, resourceType, dataToUpdate){
     })
 }
 
-export function removeItem(event, removeResource) {
+export function removeItem(event, removeResource, accessToken) {
     if(confirm('Remove?')) {
-        removeResource(event);
+        removeResource(event, accessToken);
     }
 }
 
-export function removeTask(event, updateTergetListOrder){
-    removeResource(event, "tasks", updateTergetListOrder);
+export function removeTask(event, accessToken, updateTergetListOrder){
+    removeResource(event, "tasks", accessToken, updateTergetListOrder);
 }
 
-export function removeList(event){
-    removeResource(event, "lists");
+export function removeList(event, accessToken){
+    removeResource(event, "lists", accessToken);
 }
 
-export function removeProject(event){
-    removeResource(event, "projects");
+export function removeProject(event, accessToken){
+    removeResource(event, "projects", accessToken);
 }
 
-function removeResource(event, resourceType, next){
+function removeResource(event, resourceType, accessToken, next){
     let identifier = event.target.getAttribute("identifier");
     fetch(`${backend}/${resourceType}/${identifier}`,{
-        method: "DELETE"
+        method: "DELETE",
+        headers: { "authorization": accessToken },
     })
     .then(() => {
         document.getElementById(identifier).remove();
@@ -225,4 +241,16 @@ export function onKeyPress(event, callback){
     if (key === enterKeyCode) {
         callback()
     }
+}
+
+export function cookieSearch(key) {
+  let cookie = document.cookie,
+    result;
+
+  if (cookie.includes(`${key}=`)) {
+    result = `${cookie.split(`${key}=`)[1].split(`;`)[0]}`;
+  } else {
+    result = `Key not found in cookie.`;
+  }
+  return result;
 }

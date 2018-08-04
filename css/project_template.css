@@ -121,6 +121,7 @@ h1 .fa :hover {
 	border: 1px solid #2980b9;
 	border-radius: 2%;
 	padding: 0;
+    height: 100%;
 }
 
 .navbar .btn-primary {
